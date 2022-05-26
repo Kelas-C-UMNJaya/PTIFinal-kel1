@@ -1,0 +1,1 @@
+export { GreetingsBar } from './GreetingsBar'
