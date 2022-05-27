@@ -9,7 +9,7 @@ type ButtonProps = {
 export const Button: React.FunctionComponent<ButtonProps> = ({ onClick, children, active = false }) => {
 
   return (
-    <button className={`px-3 py-2 rounded-lg text-white ${active ? "bg-sky-500 hover:bg-sky-400" : "bg-slate-500 hover:bg-slate-400"}`} onClick={onClick}>
+    <button className={`px-3 py-2 rounded-lg text-white transition ${active ? "bg-sky-500 hover:bg-sky-400" : "bg-slate-500 hover:bg-slate-400"}`} onClick={onClick}>
       {children}
     </button>
   )
