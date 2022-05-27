@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-type PlayerStatus = {
+export type PlayerStatus = {
   name: string,
   val: number,
   rate: {
@@ -9,8 +9,15 @@ type PlayerStatus = {
   }
   isActive?: boolean,
 }
-export const useStatus = (input: PlayerStatus): [PlayerStatus, () => void, (growth: number, shrink: number) => void] => {
-  const [status, setStatus] = useState<PlayerStatus>({
+
+export type StatusReturn = {
+  status: PlayerStatus,
+  toggle: () => void,
+  setRate: (growth: number, shrink: number) => void,
+}
+
+export const useStatus = (input: PlayerStatus): StatusReturn => {
+  const [status, setStatus] = useState({
     name: input.name,
     val: input.val,
     rate: input.rate,
@@ -24,7 +31,7 @@ export const useStatus = (input: PlayerStatus): [PlayerStatus, () => void, (grow
     });
   }
 
-  const toggleActive = () => {
+  const toggle = () => {
     setStatus({
       ...status,
       isActive: !status.isActive,
@@ -46,5 +53,5 @@ export const useStatus = (input: PlayerStatus): [PlayerStatus, () => void, (grow
     });
   };
 
-  return [status, toggleActive, setRate];
+  return { status, toggle, setRate };
 };
