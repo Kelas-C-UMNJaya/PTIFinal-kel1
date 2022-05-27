@@ -5,15 +5,10 @@ import { useEffect } from 'react';
 import { useStatus } from '@/lib/customHook';
 
 export const DebugPage = () => {
-  const [belajar, updateBelajarVal, setBelajarRate] = useStatus({ name: 'belajar', val: 100, rate: { growth: 1, shrink: 1 }, isActive: true });
+  const [belajar, toggleBelajar, setBelajarRate] = useStatus({ name: 'belajar', val: 100, rate: { growth: 1, shrink: 1 }, isActive: true });
 
-  useEffect(() => {
-    setInterval(() => {
-      updateBelajarVal();
-    }, 1000);
-  })
   return (
-    <div className="App container mx-auto h-screen flex items-center justify-center flex-col gap-5">
+    <div className="container mx-auto h-screen flex items-center justify-center flex-col gap-5">
       <h1 className="text-3xl font-bold">Welkam to debug session with itshiroto</h1>
       <div>
         <p>belajar: {belajar.val}</p>
@@ -22,7 +17,7 @@ export const DebugPage = () => {
         <Button>Makan</Button>
         <Button>Tidur</Button>
         <Button>Main</Button>
-        <Button>Belajar</Button>
+        <Button onClick={toggleBelajar}>Belajar</Button>
       </ButtonGroup>
       <Link to="/">
         <Button>Back</Button>

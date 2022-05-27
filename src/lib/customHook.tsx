@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 type PlayerStatus = {
   name: string,
@@ -14,7 +14,7 @@ export const useStatus = (input: PlayerStatus): [PlayerStatus, () => void, (grow
     name: input.name,
     val: input.val,
     rate: input.rate,
-    isActive: false,
+    isActive: input.isActive || false,
   });
 
   function updateVal() {
@@ -23,6 +23,18 @@ export const useStatus = (input: PlayerStatus): [PlayerStatus, () => void, (grow
       val: status.isActive ? status.val + status.rate.growth : status.val - status.rate.shrink,
     });
   }
+
+  const toggleActive = () => {
+    setStatus({
+      ...status,
+      isActive: !status.isActive,
+    });
+  }
+
+  useEffect(() => {
+    const interval = setInterval(updateVal, 1000);
+    return () => clearInterval(interval);
+  }, [status]);
 
   const setRate = (growth: number, shrink: number) => {
     setStatus({
@@ -34,5 +46,5 @@ export const useStatus = (input: PlayerStatus): [PlayerStatus, () => void, (grow
     });
   };
 
-  return [status, updateVal, setRate];
+  return [status, toggleActive, setRate];
 };
