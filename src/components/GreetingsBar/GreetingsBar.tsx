@@ -21,9 +21,9 @@ const NewsButton = (
 
 export const GreetingsBar: React.FunctionComponent<GreetingsProps> = ({ userName, userMajor, onClick }) => {
   return (
-    <div className="flex flex-row px-4 py-2 bg-gray-700 text-white rounded-lg items-center justify-between">
+    <div className="flex flex-row px-4 py-2 bg-gray-800 text-white rounded-lg items-center justify-between">
       <div className="flex-col">
-        <h3 className="lg:text-3xl font-bold">Good Morning</h3>
+        <h3 className="text-xl lg:text-3xl font-bold">Good Morning</h3>
         <p>{userName}</p>
         <p className="italic">{userMajor}</p>
       </div>

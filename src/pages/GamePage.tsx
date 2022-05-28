@@ -7,11 +7,11 @@ export const GamePage = () => {
   //   console.dir(bgImg);
   // }, []);
   return (
-    <div className={`h-screen relative flex flex-col bg-cover bg-[url(${bgImg})]`}>
+    <div className={`h-screen relative flex flex-col bg-cover bg-[url(${bgImg})] `}>
       <nav className="sticky">
       <TopBar clock="19:30" date="15 Juni 2022"/>
       </nav>
-      <main className="p-6 grid grid-cols-1 lg:grid-cols-3 grow">
+      <main className="p-6 grid grid-cols-1 lg:grid-cols-3 grow backdrop-blur-sm">
         <div className="flex flex-col gap-4">
           <GreetingsBar userName="Aule" userMajor="Informatitid"/>
           <div id="ProgressBar" className="">
