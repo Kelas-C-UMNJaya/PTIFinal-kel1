@@ -1,30 +1,35 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
+import React from "react";
+import ReactDOM from "react-dom/client";
 
-import {
-  BrowserRouter,
-  Routes,
-  Route
-} from "react-router-dom"
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import { UserProvider } from '@/lib/UserContext'
+import { UserProvider } from "@/lib/UserContext";
+import { GameProvider } from "@/lib/GameContext";
 
-import App from './App'
-import { DebugPage } from './pages/debug'
-import { GamePage } from './pages/GamePage'
+import App from "./App";
+import { DebugPage } from "./pages/debug";
+import { GamePage } from "./pages/GamePage";
 
-import './index.css'
+import "./index.css";
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
+const MainRoute = () => {
+  return (
+    <Routes>
+      <Route path="/" element={<App />} />
+      <Route path="/debug" element={<DebugPage />} />
+      <Route path="/game" element={<GamePage />} />
+    </Routes>
+  );
+};
+
+ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <UserProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<App />} />
-          <Route path="/debug" element={<DebugPage />} />
-          <Route path="/game" element={<GamePage />} />
-        </Routes>
-      </BrowserRouter>
+      <GameProvider>
+        <BrowserRouter>
+          <MainRoute />
+        </BrowserRouter>
+      </GameProvider>
     </UserProvider>
   </React.StrictMode>
-)
+);

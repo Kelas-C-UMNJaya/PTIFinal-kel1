@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { TopBar, GreetingsBar, ProgressBar, ProgressGroup, Button, ButtonGroup} from "@/components";
-const bgImg = "@/assets/background/test.jpg";
+import bgImg from "@/assets/background/test.jpg";
 
 export const GamePage = () => {
   const navigate = useNavigate();
@@ -9,7 +9,9 @@ export const GamePage = () => {
   //   console.dir(bgImg);
   // }, []);
   return (
-    <div className={`h-screen relative flex flex-col bg-cover bg-[url(${bgImg})] `}>
+    <div className={`h-screen relative flex flex-col bg-cover`} style={{
+      backgroundImage: `url(${bgImg})`
+    }}>
       <nav className="sticky">
       <TopBar clock="19:30" date="15 Juni 2022" onClick={() => navigate("/") }/>
       </nav>
