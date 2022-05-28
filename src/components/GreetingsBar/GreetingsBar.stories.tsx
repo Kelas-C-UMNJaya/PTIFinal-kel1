@@ -7,7 +7,7 @@ export default {
   title: 'GreetingsBar',
   component: GreetingsBar,
   args: {
-    userName: 'Padil Gunar',
+    userName: 'Aul Boker',
     userMajor: 'Informatika',
   }
 }
