@@ -1,20 +1,22 @@
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { TopBar, GreetingsBar, ProgressBar, ProgressGroup, Button, ButtonGroup} from "@/components";
 const bgImg = "@/assets/background/test.jpg";
 
 export const GamePage = () => {
+  const navigate = useNavigate();
   // useEffect(() => {
   //   console.dir(bgImg);
   // }, []);
   return (
     <div className={`h-screen relative flex flex-col bg-cover bg-[url(${bgImg})] `}>
       <nav className="sticky">
-      <TopBar clock="19:30" date="15 Juni 2022"/>
+      <TopBar clock="19:30" date="15 Juni 2022" onClick={() => navigate("/") }/>
       </nav>
       <main className="p-6 grid grid-cols-1 lg:grid-cols-3 grow backdrop-blur-sm">
         <div className="flex flex-col gap-4">
           <GreetingsBar userName="Aule" userMajor="Informatitid"/>
-          <div id="ProgressBar" className="">
+          <div id="ProgressBar" className="grow">
             <ProgressGroup>
               <ProgressBar value={50} icon="dashicons:book" />
               <ProgressBar value={50} icon="fa-solid:bed" />

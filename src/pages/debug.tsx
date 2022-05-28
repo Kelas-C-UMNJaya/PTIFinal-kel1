@@ -1,5 +1,4 @@
-import { ButtonGroup } from '@/components/Button';
-import { Button } from '@/components/Button';
+import { Button, ButtonGroup, ProgressBar, ProgressGroup } from '@/components';
 import { Link } from 'react-router-dom';
 import { useContext, useEffect } from 'react';
 import { useUser, Player } from '@/lib/UserContext';
@@ -18,12 +17,14 @@ export const DebugPage = () => {
     <div className="container mx-auto h-screen flex items-center justify-center flex-col gap-5">
       <h1 className="text-3xl font-bold">Welkam to debug session with itshiroto</h1>
       <h3 className="text-xl">Hello, {user.name}</h3>
-      <div>
-        <p>Belajar {belajar.status.isActive ? "(true)" : "(false)"}: {belajar.status.val}</p>
-        <p>Makan {makan.status.isActive ? "(true)" : "(false)"}: {makan.status.val}</p>
-        <p>Main {main.status.isActive ? "(true)" : "(false)"}: {main.status.val}</p>
-        <p>Tidur {tidur.status.isActive ? "(true)" : "(false)"}: {tidur.status.val}</p>
-      </div>
+      <ProgressGroup className="w-[32em]">
+        <ProgressBar value={belajar.status.val} icon="dashicons:book" />
+        <ProgressBar value={makan.status.val} icon="fa-solid:bed" />
+        <ProgressBar value={tidur.status.val} icon="ion:fast-food" />
+        <ProgressBar value={main.status.val} icon="fa:gamepad" />
+      </ProgressGroup>
+      
+      
 
       <ButtonGroup>
         <Button active={belajar.status.isActive} onClick={() => toggleStatus("belajar")}>Belajar</Button>
