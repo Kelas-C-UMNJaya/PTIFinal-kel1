@@ -7,12 +7,13 @@ export type PlayerStatus = {
     growth: number,
     shrink: number,
   }
-  isActive?: boolean,
+  isActive: boolean,
 }
 
 export type StatusReturn = {
   status: PlayerStatus,
-  toggle: () => void,
+  update: () => void,
+  toggle: (val: boolean) => void,
   setRate: (growth: number, shrink: number) => void,
 }
 
@@ -21,27 +22,26 @@ export const useStatus = (input: PlayerStatus): StatusReturn => {
     name: input.name,
     val: input.val,
     rate: input.rate,
-    isActive: input.isActive || false,
+    isActive: input.isActive
   });
 
-  function updateVal() {
-    setStatus({
-      ...status,
-      val: status.isActive ? status.val + status.rate.growth : status.val - status.rate.shrink,
+  function update() {
+    setStatus(prevVal => {
+      return {
+        ...prevVal,
+        val: prevVal.isActive ? prevVal.val + prevVal.rate.growth : prevVal.val - prevVal.rate.shrink,
+      }
     });
   }
 
-  const toggle = () => {
+  const toggle = (val: boolean) => {
     setStatus({
       ...status,
-      isActive: !status.isActive,
+      isActive: val,
     });
+    // console.log(`${status.name} is ${val}`);
   }
 
-  useEffect(() => {
-    const interval = setInterval(updateVal, 1000);
-    return () => clearInterval(interval);
-  }, [status]);
 
   const setRate = (growth: number, shrink: number) => {
     setStatus({
@@ -53,5 +53,5 @@ export const useStatus = (input: PlayerStatus): StatusReturn => {
     });
   };
 
-  return { status, toggle, setRate };
+  return { status, update, toggle, setRate };
 };

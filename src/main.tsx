@@ -7,7 +7,7 @@ import {
   Route
 } from "react-router-dom"
 
-import { UserProvider } from '@/lib/context'
+import { UserProvider } from '@/lib/UserContext'
 
 import App from './App'
 import { DebugPage } from './pages/debug'
