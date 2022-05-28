@@ -19,7 +19,6 @@ function App() {
       <Link to="/game">
         <Button>Game Page</Button>
       </Link>
-      <Outlet />
     </div>
   );
 }
