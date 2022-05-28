@@ -12,17 +12,17 @@ type ButtonProps = {
 const PauseButton = (
   {onClick} : ButtonProps
 ) => (
-  <div onClick={onClick} className="flex rounded-lg cursor-pointer transition hover:text-slate-400 text-slate-300">
-    <Icon icon="carbon:pause-filled" width="40" height="40" />
+<div onClick={onClick} className="flex justify-center rounded-lg cursor-pointer text-2xl transition hover:text-slate-400 text-slate-300">
+    <Icon icon="carbon:pause-filled" />
   </div>
 )
 
-export const TopBar = ({ clock, date }: Props) => {
+export const TopBar = ({ clock, date, ...props }: Props) => {
   return (
-    <div className=" bg-gray-800 text-white flex justify-between px-4 py-2 rounded-lg">
+    <div className="bg-gray-800 text-white rounded-b-lg flex justify-between px-4 py-2 h-9" {...props}>
       <div className="flex items-center gap-3">
-        <p className="text-3xl font-bold">{clock}</p>
-        <p>{date}</p>
+        <p className="text-xl font-bold">{clock}</p>
+        <p className="text-sm">{date}</p>
       </div>
       <div className="bg-white"></div>
       <PauseButton onClick={() => console.log("tid")} />

@@ -4,6 +4,7 @@ type GreetingsProps = {
   currentTime?: string, // TODO ganti nanti ke time
   userName: string,
   userMajor: string,
+  onClick?: () => void,
 }
 
 type ButtonProps = {
@@ -18,15 +19,15 @@ const NewsButton = (
   </div>
 )
 
-export const GreetingsBar: React.FunctionComponent<GreetingsProps> = ({ userName, userMajor }) => {
+export const GreetingsBar: React.FunctionComponent<GreetingsProps> = ({ userName, userMajor, onClick }) => {
   return (
-    <div className="lg:w-96 flex flex-row px-4 py-2 bg-gray-700 text-white rounded-lg items-center justify-between">
+    <div className="flex flex-row px-4 py-2 bg-gray-700 text-white rounded-lg items-center justify-between">
       <div className="flex-col">
         <h3 className="lg:text-3xl font-bold">Good Morning</h3>
         <p>{userName}</p>
         <p className="italic">{userMajor}</p>
       </div>
-      <NewsButton onClick={() => console.log("tid")} />
+      <NewsButton onClick={onClick} />
     </div>
   )
 }

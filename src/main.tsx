@@ -11,6 +11,7 @@ import { UserProvider } from '@/lib/UserContext'
 
 import App from './App'
 import { DebugPage } from './pages/debug'
+import { GamePage } from './pages/GamePage'
 
 import './index.css'
 
@@ -21,6 +22,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         <Routes>
           <Route path="/" element={<App />} />
           <Route path="/debug" element={<DebugPage />} />
+          <Route path="/game" element={<GamePage />} />
         </Routes>
       </BrowserRouter>
     </UserProvider>

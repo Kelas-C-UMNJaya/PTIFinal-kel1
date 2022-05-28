@@ -11,6 +11,9 @@ function App() {
       <Link to="/debug">
         <Button>Debug</Button>
       </Link>
+      <Link to="/game">
+        <Button>Game Page</Button>
+      </Link>
     </div>
   )
 }

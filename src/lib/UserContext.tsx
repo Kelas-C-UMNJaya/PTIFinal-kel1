@@ -25,11 +25,6 @@ type ProviderProps = {
   children: React.ReactNode,
 }
 
-// belajar.update();
-// makan.update();
-// tidur.update();
-// main.update();
-
 export const useUser = () => {
   const context = useContext(UserContext);
   if (context === undefined) {
