@@ -19,10 +19,10 @@ export const useStatus = (input: PlayerStatus): StatusReturn => {
         return {
           ...state,
           val: state.isActive
-            ? state.val < 100
+            ? state.val + state.rate.growth < 100
               ? state.val + state.rate.growth
               : 100
-            : state.val > 0
+            : state.val - state.rate.shrink > 0
             ? state.val - state.rate.shrink
             : 0,
         };
