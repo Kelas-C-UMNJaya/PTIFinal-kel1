@@ -53,19 +53,19 @@ export const UserProvider = ({ children }: ProviderProps) => {
   const updateStatus = () => {
     let status: keyof Player["status"];
     for (status in user.status) {
-      user.status[status].update();
+      user.status[status].dispatch({ type: "update" });
     }
   };
 
   const toggleStatus = (val: keyof Player["status"] | void) => {
     let status: keyof Player["status"];
     for (status in user.status) {
-      user.status[status].toggle(false);
+      user.status[status].dispatch({ type: "setActive", payload: false });
     }
     if (val) {
-      user.status[val].stat.isActive
-        ? user.status[val].toggle(false)
-        : user.status[val].toggle(true);
+      user.status[val].state.isActive
+        ? user.status[val].dispatch({ type: "setActive", payload: false })
+        : user.status[val].dispatch({ type: "setActive", payload: true });
     }
   };
 

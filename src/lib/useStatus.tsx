@@ -1,46 +1,54 @@
+import { ReducerReturn } from "./@types";
 import { PlayerStatus, StatusReturn } from "./@types";
-import { useState, useEffect } from "react";
+import { useReducer } from "react";
 
 export const useStatus = (input: PlayerStatus): StatusReturn => {
-  const [status, setStatus] = useState({
-    name: input.name,
-    val: input.val,
-    rate: input.rate,
-    isActive: input.isActive,
-  });
-
-  function update() {
-    setStatus((prevStat) => {
-      return {
-        ...prevStat,
-        val: prevStat.isActive
-          ? prevStat.val < 100
-            ? prevStat.val + prevStat.rate.growth
-            : 100
-          : prevStat.val > 0
-          ? prevStat.val - prevStat.rate.shrink
-          : 0,
-      };
-    });
-  }
-
-  const toggle = (val: boolean) => {
-    setStatus({
-      ...status,
-      isActive: val,
-    });
-    // console.log(`${status.name} is ${val}`);
+  const initRate = () => {
+    return {
+      growth: input.rate.growth,
+      shrink: input.rate.shrink,
+    };
   };
 
-  const setRate = (growth: number, shrink: number) => {
-    setStatus({
-      ...status,
-      rate: {
-        growth: growth,
-        shrink: shrink,
-      },
-    });
+  const reducer = (
+    state: PlayerStatus,
+    action: ReducerReturn
+  ): PlayerStatus => {
+    switch (action.type) {
+      case "update":
+        return {
+          ...state,
+          val: state.isActive
+            ? state.val < 100
+              ? state.val + state.rate.growth
+              : 100
+            : state.val > 0
+            ? state.val - state.rate.shrink
+            : 0,
+        };
+
+      case "setRate":
+        return {
+          ...state,
+          rate: action.payload,
+        };
+
+      case "setActive":
+        return {
+          ...state,
+          isActive: action.payload,
+        };
+
+      case "resetRate":
+        return {
+          ...state,
+          rate: initRate(),
+        };
+      default:
+        throw new Error();
+    }
   };
 
-  return { stat: status, update, toggle, setRate };
+  const [state, dispatch] = useReducer(reducer, input);
+  return { state, dispatch };
 };

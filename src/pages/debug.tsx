@@ -28,23 +28,23 @@ export const DebugPage = () => {
 
       <ProgressGroup className="w-[32em]">
         <ProgressBar
-          label={`${Math.round(belajar.stat.val)}%`}
-          value={belajar.stat.val}
+          label={`${Math.round(belajar.state.val)}%`}
+          value={belajar.state.val}
           icon="dashicons:book"
         />
         <ProgressBar
-          label={`${Math.round(makan.stat.val)}%`}
-          value={makan.stat.val}
+          label={`${Math.round(makan.state.val)}%`}
+          value={makan.state.val}
           icon="ion:fast-food"
         />
         <ProgressBar
-          label={`${Math.round(tidur.stat.val)}%`}
-          value={tidur.stat.val}
+          label={`${Math.round(tidur.state.val)}%`}
+          value={tidur.state.val}
           icon="fa-solid:bed"
         />
         <ProgressBar
-          label={`${Math.round(main.stat.val)}%`}
-          value={main.stat.val}
+          label={`${Math.round(main.state.val)}%`}
+          value={main.state.val}
           icon="fa:gamepad"
         />
       </ProgressGroup>
@@ -54,13 +54,40 @@ export const DebugPage = () => {
           {Location[locationIdx].actions.map((loc, idx) => (
             <Button
               key={idx}
-              active={user.status[loc.status.name].stat.isActive}
+              active={user.status[loc.status.name].state.isActive}
               onClick={() => toggleStatus(loc.status.name)}
             >
               {loc.name}
             </Button>
           ))}
         </ButtonGroup>
+
+        <ButtonGroup>
+          {Location[locationIdx].actions.map((loc, idx) => (
+            <>
+              <Button
+                key={idx}
+                onClick={() =>
+                  user.status[loc.status.name].dispatch({ type: "resetRate" })
+                }
+              >
+                Reset {loc.name}
+              </Button>
+              <Button
+                key={idx + 10}
+                onClick={() =>
+                  user.status[loc.status.name].dispatch({
+                    type: "setRate",
+                    payload: { growth: 30, shrink: 40 },
+                  })
+                }
+              >
+                Change {loc.name} rate
+              </Button>
+            </>
+          ))}
+        </ButtonGroup>
+
         <ButtonGroup className="justify-center">
           <Button
             onClick={() =>

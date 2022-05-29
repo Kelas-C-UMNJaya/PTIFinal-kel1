@@ -20,10 +20,8 @@ export type PlayerStatus = {
   isActive: boolean;
 };
 export type StatusReturn = {
-  stat: PlayerStatus;
-  update: () => void;
-  toggle: (val: boolean) => void;
-  setRate: (growth: number, shrink: number) => void;
+  state: PlayerStatus;
+  dispatch: React.Dispatch<ReducerReturn>;
 };
   
 export interface Player {
@@ -57,4 +55,19 @@ export interface LocationType {
   bgImg: string;
   actions: LocationActionType[] 
 }
+  
+export type ReducerReturn = {
+  type: "update";
+} | {
+  type: "setRate";
+  payload: {
+    growth: number;
+    shrink: number;
+  };
+} | {
+  type: "resetRate";
+} | {
+  type: "setActive";
+  payload: boolean;
+};
   

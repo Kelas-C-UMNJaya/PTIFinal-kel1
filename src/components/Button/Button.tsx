@@ -2,7 +2,7 @@ import { useState } from "react";
 
 type ButtonProps = {
   onClick?: () => void;
-  children: string;
+  children: string | string[];
   active?: Boolean;
 };
 
