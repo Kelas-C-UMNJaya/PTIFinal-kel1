@@ -20,7 +20,7 @@ export type PlayerStatus = {
   isActive: boolean;
 };
 export type StatusReturn = {
-  status: PlayerStatus;
+  stat: PlayerStatus;
   update: () => void;
   toggle: (val: boolean) => void;
   setRate: (growth: number, shrink: number) => void;
@@ -45,7 +45,7 @@ export interface PlayerContext {
 
 export interface LocationActionType {
   name: string;
-  affectStatus: {
+  status: {
     name: keyof Player["status"]; 
     growth?: number;
     shrink?: number;
@@ -55,6 +55,6 @@ export interface LocationActionType {
 export interface LocationType {
   name: string;
   bgImg: string;
-  actions: LocationActionType[] // TODO: Ganti ke typenya sendiri i guess? (agak redundan soalnya)
+  actions: LocationActionType[] 
 }
   

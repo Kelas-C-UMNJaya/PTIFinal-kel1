@@ -24,27 +24,27 @@ export const DebugPage = () => {
       <h3 className="text-3xl font-bold">
         Hello, {user.name} from {user.major}
       </h3>
-      <p>{format(time, "HH:mm:ss | E, dd MMMM yyyy")}</p>
+      <p>{format(time, "HH:mm | E, dd MMMM yyyy")}</p>
 
       <ProgressGroup className="w-[32em]">
         <ProgressBar
-          label={`${Math.round(belajar.status.val)}%`}
-          value={belajar.status.val}
+          label={`${Math.round(belajar.stat.val)}%`}
+          value={belajar.stat.val}
           icon="dashicons:book"
         />
         <ProgressBar
-          label={`${Math.round(makan.status.val)}%`}
-          value={makan.status.val}
+          label={`${Math.round(makan.stat.val)}%`}
+          value={makan.stat.val}
           icon="ion:fast-food"
         />
         <ProgressBar
-          label={`${Math.round(tidur.status.val)}%`}
-          value={tidur.status.val}
+          label={`${Math.round(tidur.stat.val)}%`}
+          value={tidur.stat.val}
           icon="fa-solid:bed"
         />
         <ProgressBar
-          label={`${Math.round(main.status.val)}%`}
-          value={main.status.val}
+          label={`${Math.round(main.stat.val)}%`}
+          value={main.stat.val}
           icon="fa:gamepad"
         />
       </ProgressGroup>
@@ -54,8 +54,8 @@ export const DebugPage = () => {
           {Location[locationIdx].actions.map((loc, idx) => (
             <Button
               key={idx}
-              active={user.status[loc.affectStatus.name].status.isActive}
-              onClick={() => toggleStatus(loc.affectStatus.name)}
+              active={user.status[loc.status.name].stat.isActive}
+              onClick={() => toggleStatus(loc.status.name)}
             >
               {loc.name}
             </Button>

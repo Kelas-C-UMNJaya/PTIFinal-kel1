@@ -42,5 +42,5 @@ export const useStatus = (input: PlayerStatus): StatusReturn => {
     });
   };
 
-  return { status, update, toggle, setRate };
+  return { stat: status, update, toggle, setRate };
 };

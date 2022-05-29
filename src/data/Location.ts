@@ -9,14 +9,14 @@ export const Location: LocationType[] = [
     actions: [
       {
         name: "Kuliah",
-        affectStatus: {
+        status: {
           name: "belajar",
           growth: 1,
         }
       },
       {
         name: "Makan",
-        affectStatus: {
+        status: {
           name: "makan",
           growth: 1,
         }
@@ -29,15 +29,22 @@ export const Location: LocationType[] = [
     actions: [
       {
         name: "Tidur",
-        affectStatus: {
+        status: {
           name: "tidur",
           growth: 1,
         }
       },
       {
         name: "Main",
-        affectStatus: {
+        status: {
           name: "main",
+          growth: 1,
+        }
+      },
+      {
+        name: "Makan",
+        status: {
+          name: "makan",
           growth: 1,
         }
       }

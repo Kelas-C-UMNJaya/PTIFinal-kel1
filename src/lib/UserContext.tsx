@@ -63,7 +63,7 @@ export const UserProvider = ({ children }: ProviderProps) => {
       user.status[status].toggle(false);
     }
     if (val) {
-      user.status[val].status.isActive
+      user.status[val].stat.isActive
         ? user.status[val].toggle(false)
         : user.status[val].toggle(true);
     }

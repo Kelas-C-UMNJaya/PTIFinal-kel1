@@ -53,10 +53,10 @@ function Sidebar() {
       <GreetingsBar userName={user.name} userMajor={user.major} />
       <div id="ProgressBar" className="grow">
         <ProgressGroup>
-          <ProgressBar value={belajar.status.val} icon="dashicons:book" />
-          <ProgressBar value={tidur.status.val} icon="fa-solid:bed" />
-          <ProgressBar value={makan.status.val} icon="ion:fast-food" />
-          <ProgressBar value={main.status.val} icon="fa:gamepad" />
+          <ProgressBar value={belajar.stat.val} icon="dashicons:book" />
+          <ProgressBar value={tidur.stat.val} icon="fa-solid:bed" />
+          <ProgressBar value={makan.stat.val} icon="ion:fast-food" />
+          <ProgressBar value={main.stat.val} icon="fa:gamepad" />
         </ProgressGroup>
       </div>
       <div id="Button" className="mt-auto">
