@@ -10,12 +10,16 @@ export const useStatus = (input: PlayerStatus): StatusReturn => {
   });
 
   function update() {
-    setStatus((prevVal) => {
+    setStatus((prevStat) => {
       return {
-        ...prevVal,
-        val: prevVal.isActive
-          ? prevVal.val + prevVal.rate.growth
-          : prevVal.val - prevVal.rate.shrink,
+        ...prevStat,
+        val: prevStat.isActive
+          ? prevStat.val < 100
+            ? prevStat.val + prevStat.rate.growth
+            : 100
+          : prevStat.val > 0
+          ? prevStat.val - prevStat.rate.shrink
+          : 0,
       };
     });
   }

@@ -31,20 +31,20 @@ export const UserProvider = ({ children }: ProviderProps) => {
       }),
       makan: useStatus({
         name: "makan",
-        val: 0,
-        rate: { growth: 1, shrink: 0 },
+        val: 50,
+        rate: { growth: 0.5, shrink: 0.3 },
         isActive: false,
       }),
       tidur: useStatus({
         name: "tidur",
-        val: 0,
-        rate: { growth: 1, shrink: 0 },
+        val: 50,
+        rate: { growth: 1, shrink: 0.1 },
         isActive: false,
       }),
       main: useStatus({
         name: "main",
-        val: 0,
-        rate: { growth: 1, shrink: 0 },
+        val: 50,
+        rate: { growth: 5, shrink: 2 },
         isActive: false,
       }),
     },
@@ -57,14 +57,16 @@ export const UserProvider = ({ children }: ProviderProps) => {
     }
   };
 
-  const toggleStatus = (val: keyof Player["status"]) => {
+  const toggleStatus = (val: keyof Player["status"] | void) => {
     let status: keyof Player["status"];
     for (status in user.status) {
       user.status[status].toggle(false);
     }
-    user.status[val].status.isActive
-      ? user.status[val].toggle(false)
-      : user.status[val].toggle(true);
+    if (val) {
+      user.status[val].status.isActive
+        ? user.status[val].toggle(false)
+        : user.status[val].toggle(true);
+    }
   };
 
   const changeData = (name: string, major: string) => {

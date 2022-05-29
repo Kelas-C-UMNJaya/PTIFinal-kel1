@@ -14,12 +14,6 @@ import {
 import { Player } from "@/lib/@types";
 import bgImg from "@/assets/background/test.jpg";
 
-type SidebarProps = {
-  user: Player;
-  updateStatus: () => void;
-  toggleStatus: (val: keyof Player["status"]) => void;
-};
-
 export const GamePage = () => {
   const navigate = useNavigate();
   const { updateStatus } = useUser();
@@ -53,15 +47,16 @@ export const GamePage = () => {
 
 function Sidebar() {
   const { user, updateStatus, toggleStatus } = useUser();
+  const { belajar, makan, main, tidur } = user.status;
   return (
     <div className="flex flex-col gap-4">
       <GreetingsBar userName={user.name} userMajor={user.major} />
       <div id="ProgressBar" className="grow">
         <ProgressGroup>
-          <ProgressBar value={50} icon="dashicons:book" />
-          <ProgressBar value={50} icon="fa-solid:bed" />
-          <ProgressBar value={50} icon="ion:fast-food" />
-          <ProgressBar value={50} icon="fa:gamepad" />
+          <ProgressBar value={belajar.status.val} icon="dashicons:book" />
+          <ProgressBar value={tidur.status.val} icon="fa-solid:bed" />
+          <ProgressBar value={makan.status.val} icon="ion:fast-food" />
+          <ProgressBar value={main.status.val} icon="fa:gamepad" />
         </ProgressGroup>
       </div>
       <div id="Button" className="mt-auto">

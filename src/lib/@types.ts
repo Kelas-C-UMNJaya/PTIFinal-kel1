@@ -1,12 +1,12 @@
 import { Duration } from "date-fns";
 
 export type GameContextType = {
-  location: string; // TODO Ganti i guess?
+  location: LocationType | null; 
   time: Date;
   updateTime: () => void
 };
 
-export type ProviderProps = {
+export interface ProviderProps {
   children: React.ReactNode;
 };
 
@@ -39,7 +39,22 @@ export interface Player {
 export interface PlayerContext {
   user: Player;
   updateStatus: () => void;
-  toggleStatus: (val: keyof Player["status"]) => void;
+  toggleStatus: (val: keyof Player["status"] | void) => void;
   changeData: (name: string, major: string) => void;
+}
+
+export interface LocationActionType {
+  name: string;
+  affectStatus: {
+    name: keyof Player["status"]; 
+    growth?: number;
+    shrink?: number;
+  };
+}
+
+export interface LocationType {
+  name: string;
+  bgImg: string;
+  actions: LocationActionType[] // TODO: Ganti ke typenya sendiri i guess? (agak redundan soalnya)
 }
   
