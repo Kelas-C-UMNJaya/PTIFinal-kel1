@@ -13,12 +13,17 @@ function App() {
           itshiroto
         </a>
       </p>
-      <Link to="/debug">
-        <Button>Debug</Button>
-      </Link>
-      <Link to="/game">
-        <Button>Game Page</Button>
-      </Link>
+      <div className="flex gap-3">
+        <Link to="/debug">
+          <Button>Debug Page</Button>
+        </Link>
+        <Link to="/game">
+          <Button>Game Page</Button>
+        </Link>
+        <Link to="avatar">
+          <Button>Avatar Page</Button>
+        </Link>
+      </div>
     </div>
   );
 }
