@@ -1,24 +1,7 @@
+import { Player, PlayerContext } from "./@types";
 import { useState, createContext, useContext } from "react";
-import { useStatus, StatusReturn as Status } from "./useStatus";
+import { useStatus } from "./useStatus";
 import { ProviderProps } from "./@types";
-
-export interface Player {
-  name: string;
-  major: string;
-  status: {
-    belajar: Status;
-    makan: Status;
-    tidur: Status;
-    main: Status;
-  };
-}
-
-interface PlayerContext {
-  user: Player;
-  updateStatus: () => void;
-  toggleStatus: (val: keyof Player["status"]) => void;
-  changeData: (name: string, major: string) => void;
-}
 
 export const UserContext = createContext<PlayerContext | undefined>(undefined);
 

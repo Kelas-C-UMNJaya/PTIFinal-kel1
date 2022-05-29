@@ -11,7 +11,7 @@ import {
   Button,
   ButtonGroup,
 } from "@/components";
-import { Player } from "@/lib/UserContext";
+import { Player } from "@/lib/@types";
 import bgImg from "@/assets/background/test.jpg";
 
 type SidebarProps = {
@@ -22,7 +22,7 @@ type SidebarProps = {
 
 export const GamePage = () => {
   const navigate = useNavigate();
-  const { user, updateStatus, toggleStatus } = useUser();
+  const { updateStatus } = useUser();
   const { time, location, updateTime } = useGameData();
   useEffect(() => {
     const interval = setInterval(() => {
@@ -44,14 +44,15 @@ export const GamePage = () => {
         onClick={() => navigate("/")}
       />
       <main className="p-6 grid grid-cols-1 lg:grid-cols-3 grow backdrop-blur-sm">
-        <Sidebar {...{ user, updateStatus, toggleStatus }} />
+        <Sidebar />
         {/* <h1>Game Page Aul suka titid gede</h1> */}
       </main>
     </div>
   );
 };
 
-function Sidebar({ user, updateStatus, toggleStatus }: SidebarProps) {
+function Sidebar() {
+  const { user, updateStatus, toggleStatus } = useUser();
   return (
     <div className="flex flex-col gap-4">
       <GreetingsBar userName={user.name} userMajor={user.major} />
