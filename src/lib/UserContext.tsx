@@ -1,24 +1,7 @@
+import { Player, PlayerContext } from "./@types";
 import { useState, createContext, useContext } from "react";
-import { useStatus, StatusReturn as Status } from "./useStatus";
+import { useStatus } from "./useStatus";
 import { ProviderProps } from "./@types";
-
-export interface Player {
-  name: string;
-  major: string;
-  status: {
-    belajar: Status;
-    makan: Status;
-    tidur: Status;
-    main: Status;
-  };
-}
-
-interface PlayerContext {
-  user: Player;
-  updateStatus: () => void;
-  toggleStatus: (val: keyof Player["status"]) => void;
-  changeData: (name: string, major: string) => void;
-}
 
 export const UserContext = createContext<PlayerContext | undefined>(undefined);
 
@@ -48,20 +31,20 @@ export const UserProvider = ({ children }: ProviderProps) => {
       }),
       makan: useStatus({
         name: "makan",
-        val: 0,
-        rate: { growth: 1, shrink: 0 },
+        val: 50,
+        rate: { growth: 0.5, shrink: 0.3 },
         isActive: false,
       }),
       tidur: useStatus({
         name: "tidur",
-        val: 0,
-        rate: { growth: 1, shrink: 0 },
+        val: 50,
+        rate: { growth: 1, shrink: 0.1 },
         isActive: false,
       }),
       main: useStatus({
         name: "main",
-        val: 0,
-        rate: { growth: 1, shrink: 0 },
+        val: 50,
+        rate: { growth: 5, shrink: 2 },
         isActive: false,
       }),
     },
@@ -70,18 +53,20 @@ export const UserProvider = ({ children }: ProviderProps) => {
   const updateStatus = () => {
     let status: keyof Player["status"];
     for (status in user.status) {
-      user.status[status].update();
+      user.status[status].dispatch({ type: "update" });
     }
   };
 
-  const toggleStatus = (val: keyof Player["status"]) => {
+  const toggleStatus = (val: keyof Player["status"] | void) => {
     let status: keyof Player["status"];
     for (status in user.status) {
-      user.status[status].toggle(false);
+      user.status[status].dispatch({ type: "setActive", payload: false });
     }
-    user.status[val].status.isActive
-      ? user.status[val].toggle(false)
-      : user.status[val].toggle(true);
+    if (val) {
+      user.status[val].state.isActive
+        ? user.status[val].dispatch({ type: "setActive", payload: false })
+        : user.status[val].dispatch({ type: "setActive", payload: true });
+    }
   };
 
   const changeData = (name: string, major: string) => {

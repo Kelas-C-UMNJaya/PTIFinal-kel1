@@ -1,57 +1,54 @@
-import { useState, useEffect } from 'react';
-
-export type PlayerStatus = {
-  name: string,
-  val: number,
-  rate: {
-    growth: number,
-    shrink: number,
-  }
-  isActive: boolean,
-}
-
-export type StatusReturn = {
-  status: PlayerStatus,
-  update: () => void,
-  toggle: (val: boolean) => void,
-  setRate: (growth: number, shrink: number) => void,
-}
+import { ReducerReturn } from "./@types";
+import { PlayerStatus, StatusReturn } from "./@types";
+import { useReducer } from "react";
 
 export const useStatus = (input: PlayerStatus): StatusReturn => {
-  const [status, setStatus] = useState({
-    name: input.name,
-    val: input.val,
-    rate: input.rate,
-    isActive: input.isActive
-  });
-
-  function update() {
-    setStatus(prevVal => {
-      return {
-        ...prevVal,
-        val: prevVal.isActive ? prevVal.val + prevVal.rate.growth : prevVal.val - prevVal.rate.shrink,
-      }
-    });
-  }
-
-  const toggle = (val: boolean) => {
-    setStatus({
-      ...status,
-      isActive: val,
-    });
-    // console.log(`${status.name} is ${val}`);
-  }
-
-
-  const setRate = (growth: number, shrink: number) => {
-    setStatus({
-      ...status,
-      rate: {
-        growth: growth,
-        shrink: shrink,
-      },
-    });
+  const initRate = () => {
+    return {
+      growth: input.rate.growth,
+      shrink: input.rate.shrink,
+    };
   };
 
-  return { status, update, toggle, setRate };
+  const reducer = (
+    state: PlayerStatus,
+    action: ReducerReturn
+  ): PlayerStatus => {
+    switch (action.type) {
+      case "update":
+        return {
+          ...state,
+          val: state.isActive
+            ? state.val + state.rate.growth < 100
+              ? state.val + state.rate.growth
+              : 100
+            : state.val - state.rate.shrink > 0
+            ? state.val - state.rate.shrink
+            : 0,
+        };
+
+      case "setRate":
+        return {
+          ...state,
+          rate: action.payload,
+        };
+
+      case "setActive":
+        return {
+          ...state,
+          isActive: action.payload,
+        };
+
+      case "resetRate":
+        return {
+          ...state,
+          rate: initRate(),
+        };
+      default:
+        throw new Error();
+    }
+  };
+
+  const [state, dispatch] = useReducer(reducer, input);
+  return { state, dispatch };
 };

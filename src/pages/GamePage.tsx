@@ -11,11 +11,12 @@ import {
   Button,
   ButtonGroup,
 } from "@/components";
+import { Player } from "@/lib/@types";
 import bgImg from "@/assets/background/test.jpg";
 
 export const GamePage = () => {
   const navigate = useNavigate();
-  const { user, updateStatus, toggleStatus } = useUser();
+  const { updateStatus } = useUser();
   const { time, location, updateTime } = useGameData();
   useEffect(() => {
     const interval = setInterval(() => {
@@ -31,34 +32,40 @@ export const GamePage = () => {
         backgroundImage: `url(${bgImg})`,
       }}
     >
-      <nav className="sticky">
-        <TopBar
-          clock={format(time, "HH:mm")}
-          date={format(time, "E, dd MMMM yyyy")}
-          onClick={() => navigate("/")}
-        />
-      </nav>
+      <TopBar
+        clock={format(time, "HH:mm")}
+        date={format(time, "E, dd MMMM yyyy")}
+        onClick={() => navigate("/")}
+      />
       <main className="p-6 grid grid-cols-1 lg:grid-cols-3 grow backdrop-blur-sm">
-        <div className="flex flex-col gap-4">
-          <GreetingsBar userName={user.name} userMajor={user.major} />
-          <div id="ProgressBar" className="grow">
-            <ProgressGroup>
-              <ProgressBar value={50} icon="dashicons:book" />
-              <ProgressBar value={50} icon="fa-solid:bed" />
-              <ProgressBar value={50} icon="ion:fast-food" />
-              <ProgressBar value={50} icon="fa:gamepad" />
-            </ProgressGroup>
-          </div>
-          <div id="Button" className="mt-auto">
-            <ButtonGroup>
-              <Button>Belajar</Button>
-              <Button>HolyWings</Button>
-              <Button>Kembali ke rumah</Button>
-            </ButtonGroup>
-          </div>
-        </div>
+        <Sidebar />
         {/* <h1>Game Page Aul suka titid gede</h1> */}
       </main>
     </div>
   );
 };
+
+function Sidebar() {
+  const { user, updateStatus, toggleStatus } = useUser();
+  const { belajar, makan, main, tidur } = user.status;
+  return (
+    <div className="flex flex-col gap-4">
+      <GreetingsBar userName={user.name} userMajor={user.major} />
+      <div id="ProgressBar" className="grow">
+        <ProgressGroup>
+          <ProgressBar value={belajar.stat.val} icon="dashicons:book" />
+          <ProgressBar value={tidur.stat.val} icon="fa-solid:bed" />
+          <ProgressBar value={makan.stat.val} icon="ion:fast-food" />
+          <ProgressBar value={main.stat.val} icon="fa:gamepad" />
+        </ProgressGroup>
+      </div>
+      <div id="Button" className="mt-auto">
+        <ButtonGroup>
+          <Button>Belajar</Button>
+          <Button>HolyWings</Button>
+          <Button>Kembali ke rumah</Button>
+        </ButtonGroup>
+      </div>
+    </div>
+  );
+}
