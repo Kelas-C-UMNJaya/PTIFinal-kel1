@@ -9,6 +9,7 @@ export type GameContextType = {
 export interface ComponentProps {
   children?: React.ReactNode;
   className?: string;
+  onClick?: () => void;
 }
 
 export interface ProviderProps {
@@ -31,6 +32,7 @@ export type StatusReturn = {
   
 export interface Player {
   name: string;
+  avatar: string;
   major: string;
   status: {
     belajar: StatusReturn;
@@ -43,7 +45,7 @@ export interface PlayerContext {
   user: Player;
   updateStatus: () => void;
   toggleStatus: (val: keyof Player["status"] | void) => void;
-  changeData: (name: string, major: string) => void;
+  changeData: ({name, major, avatar}: {name?: string, major?: string, avatar?:string}) => void;
 }
 
 export interface LocationActionType {
@@ -75,4 +77,14 @@ export type ReducerReturn = {
   type: "setActive";
   payload: boolean;
 };
+
+export interface MatkulType {
+  name: string;
+  val: number;
+  duration: number;
+}
   
+export interface JurusanType {
+  name: string;
+  matkul: MatkulType[];
+}

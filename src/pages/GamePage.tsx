@@ -21,6 +21,7 @@ export const GamePage = () => {
   const { time, location, updateTime } = useGameData();
   const [mapOpen, setMapOpen] = useState(false);
   const [locIdx, setLocIdx] = useState(0);
+
   useEffect(() => {
     const interval = setInterval(() => {
       updateStatus();
@@ -28,6 +29,7 @@ export const GamePage = () => {
     }, 1000);
     return () => clearInterval(interval);
   }, []);
+
   return (
     <div
       className={`h-screen relative flex flex-col bg-cover`}

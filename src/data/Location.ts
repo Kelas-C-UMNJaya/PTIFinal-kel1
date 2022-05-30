@@ -11,14 +11,14 @@ export const Location: LocationType[] = [
         name: "Kuliah",
         status: {
           name: "belajar",
-          growth: 1,
+          growth: 0.4,
         }
       },
       {
         name: "Makan",
         status: {
           name: "makan",
-          growth: 1,
+          growth: 2,
         }
       },
     ]
@@ -31,9 +31,32 @@ export const Location: LocationType[] = [
         name: "Tidur",
         status: {
           name: "tidur",
-          growth: 1,
+          growth: 0.2,
+          shrink: 0.1,
         }
       },
+      {
+        name: "Main",
+        status: {
+          name: "main",
+          growth: 0.6,
+          shrink: 0.1,
+        }
+      },
+      {
+        name: "Makan",
+        status: {
+          name: "makan",
+          growth: 10,
+          shrink: 0.4,
+        }
+      }
+    ]
+  },
+  {
+    name: "HolyWings",
+    bgImg: testBg,
+    actions: [
       {
         name: "Main",
         status: {
@@ -45,7 +68,7 @@ export const Location: LocationType[] = [
         name: "Makan",
         status: {
           name: "makan",
-          growth: 1,
+          growth: 4,
         }
       }
     ]
