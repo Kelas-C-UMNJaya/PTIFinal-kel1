@@ -6,6 +6,11 @@ export type GameContextType = {
   updateTime: () => void
 };
 
+export interface ComponentProps {
+  children?: React.ReactNode;
+  className?: string;
+}
+
 export interface ProviderProps {
   children: React.ReactNode;
 };
