@@ -16,11 +16,13 @@ export const useUser = () => {
 export const UserProvider = ({ children }: ProviderProps) => {
   const [data, setData] = useState({
     name: "Agus",
+    avatar: "https://i.pravatar.cc/300",
     major: "Teknik Informatika",
   });
 
   const user = {
     name: data.name,
+    avatar: avatar
     major: data.major,
     status: {
       belajar: useStatus({
