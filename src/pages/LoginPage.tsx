@@ -117,7 +117,7 @@ const AvatarSelect = ({onClick}: {onClick: (img: string) => void}) => {
       <h1 className="text-2xl md:text-5xl">Pilih Avatar</h1>
         
       
-      <div className="grid grid-cols-2 grid-rows-2 md:grid-rows-1 gap-12 lg:grid-cols-4">
+      <div className="grid grid-cols-2 grid-rows-2 md:grid-rows-1 gap-6 lg:grid-cols-4">
         {avatar.map((img, idx) => {
           return (
             <div key={idx} className=" lg:w-full md:w-1/2 rounded hover:shadow-2xl" onClick={() => {
