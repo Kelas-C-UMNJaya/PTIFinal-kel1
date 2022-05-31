@@ -14,10 +14,12 @@ import {
 } from "@/components";
 import { LocationType, Player } from "@/lib/@types";
 import { Location as LocationData } from "@/data/Location";
+import { jurusan as JurusanData } from "@/data/Jurusan";
 
 type ModalType = {
   news: boolean;
   location: boolean;
+  matkul: boolean;
 };
 
 export const GamePage = () => {
@@ -27,6 +29,7 @@ export const GamePage = () => {
   const [openModal, setOpenModal] = useState<ModalType>({
     news: false,
     location: false,
+    matkul: false,
   });
 
   useEffect(() => {
@@ -72,6 +75,8 @@ export const GamePage = () => {
           setMapOpen={() => setOpenModal({ ...openModal, location: false })}
           handleLocationChange={handleLocationChange}
         />
+        <NewsModal open={openModal.news} setOpen={handleClickModal} />
+        <MatkulModal open={openModal.matkul} setOpen={handleClickModal} />
       </main>
     </div>
   );
@@ -91,7 +96,7 @@ function Sidebar({
     <div className="flex flex-col gap-4">
       <GreetingsBar
         userName={user.name}
-        userMajor={user.major}
+        userMajor={user.major.name}
         onClick={() => setOpenModal("news", true)}
       />
       <div id="ProgressBar" className="grow">
@@ -109,7 +114,11 @@ function Sidebar({
               <Button
                 key={idx}
                 active={user.status[loc.status.name].state.isActive}
-                onClick={() => toggleStatus(loc.status.name)}
+                onClick={() =>
+                  loc.status.modal
+                    ? setOpenModal("matkul", true)
+                    : toggleStatus(loc.status.name)
+                }
               >
                 {loc.name}
               </Button>
@@ -169,6 +178,29 @@ const NewsModal = ({
     >
       {/* TODO: print newsnya disini, kasih bentuk card gitu
       (kalo bisa, bikin component terpisah untuk cardnya) */}
+    </OverlayModal>
+  );
+};
+
+const MatkulModal = ({
+  open,
+  setOpen,
+}: {
+  open: boolean;
+  setOpen: (modal: keyof ModalType, value: boolean) => void;
+}) => {
+  const { user } = useUser();
+  return (
+    <OverlayModal
+      title="Mata Kuliah"
+      onClose={() => setOpen("matkul", false)}
+      isOpen={open}
+      className="col-start-3 col-end-4"
+      disableFloat={true}
+    >
+      {user.major.matkul.map((matkul, idx) => (
+        <Button>{matkul.name}</Button>
+      ))}
     </OverlayModal>
   );
 };

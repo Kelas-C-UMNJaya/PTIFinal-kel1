@@ -1,7 +1,8 @@
-import { Player, PlayerContext } from "./@types";
+import { JurusanType, Player, PlayerBio, PlayerContext } from "./@types";
 import { useState, createContext, useContext } from "react";
 import { useStatus } from "./useStatus";
 import { ProviderProps } from "./@types";
+import { jurusan } from "@/data/Jurusan";
 
 export const UserContext = createContext<PlayerContext | undefined>(undefined);
 
@@ -14,10 +15,10 @@ export const useUser = () => {
 };
 
 export const UserProvider = ({ children }: ProviderProps) => {
-  const [data, setData] = useState({
+  const [data, setData] = useState<PlayerBio>({
     name: "Agus",
     avatar: "",
-    major: "Teknik Informatika",
+    major: jurusan[0],
   });
 
   const user = {
@@ -71,12 +72,19 @@ export const UserProvider = ({ children }: ProviderProps) => {
     }
   };
 
-  const changeData = ({name, major, avatar}: {name?: string, major?: string, avatar?:string}) => {
+  const changeData = ({
+    name,
+    major,
+    avatar,
+  }: {
+    name?: string;
+    major?: JurusanType;
+    avatar?: string;
+  }) => {
     setData({
-      name: name !== undefined ? name: data.name,
+      name: name !== undefined ? name : data.name,
       major: major !== undefined ? major : data.major,
       avatar: avatar !== undefined ? avatar : data.avatar,
-      
     });
   };
 

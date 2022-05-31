@@ -86,7 +86,7 @@ const LoginPage2 = ({
 
     changeData({
       name: name.current?.value,
-      major: jurusan.current?.value,
+      major: JurusanData.find((val) => val.name === jurusan.current?.value),
     });
     navigate("/game");
   };

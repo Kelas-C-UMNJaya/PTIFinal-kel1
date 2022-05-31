@@ -12,6 +12,7 @@ export const Location: LocationType[] = [
         status: {
           name: "belajar",
           growth: 0.4,
+          modal: "matkul"
         }
       },
       {

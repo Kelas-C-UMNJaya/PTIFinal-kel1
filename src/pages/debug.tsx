@@ -22,7 +22,7 @@ export const DebugPage = () => {
   return (
     <div className="bg-zinc-900 text-gray-200 mx-auto h-screen flex items-center justify-center flex-col gap-5">
       <h3 className="text-3xl font-bold">
-        Hello, {user.name} from {user.major}
+        Hello, {user.name} from {user.major.name}
       </h3>
       <p>Clock is {gameClock.status ? "active" : "not active"}</p>
       <p>{format(time, "HH:mm | E, dd MMMM yyyy")}</p>
@@ -90,15 +90,6 @@ export const DebugPage = () => {
         </ButtonGroup>
 
         <ButtonGroup className="justify-center">
-          <Button
-            onClick={() =>
-              user.name === "Agus"
-                ? changeData({ name: "Bambang", major: "DKV" })
-                : changeData({ name: "Agus", major: "Informatika" })
-            }
-          >
-            Change User
-          </Button>
           <Button
             onClick={() => {
               locationIdx == 0 ? setLocationIdx(1) : setLocationIdx(0);
