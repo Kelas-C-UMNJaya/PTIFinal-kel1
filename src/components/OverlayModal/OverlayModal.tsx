@@ -21,7 +21,7 @@ export const OverlayModal = ({
   }
   return (
     <div
-      className={`flex flex-col gap-3 rounded-lg p-5 z-50 transition-opacity duration-300 ease-in-out bg-slate-800 text-white
+      className={`flex flex-col gap-3 rounded-lg p-5 z-50 transition-opacity duration-300 ease-in-out bg-slate-800 text-white h-0 min-h-full
       ${!disableFloat ? "inset-0 absolute" : ""} ${className}`}
     >
       <div className="flex justify-between">
