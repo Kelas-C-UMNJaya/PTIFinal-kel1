@@ -15,11 +15,19 @@ import {
 import { LocationType, Player } from "@/lib/@types";
 import { Location as LocationData } from "@/data/Location";
 
+type ModalType = {
+  news: boolean;
+  location: boolean;
+};
+
 export const GamePage = () => {
   const navigate = useNavigate();
   const { updateStatus } = useUser();
   const { time, location, setLocation, gameClock } = useGameData();
-  const [mapOpen, setMapOpen] = useState(false);
+  const [openModal, setOpenModal] = useState<ModalType>({
+    news: false,
+    location: false,
+  });
 
   useEffect(() => {
     gameClock.start();
@@ -30,7 +38,7 @@ export const GamePage = () => {
 
   function handleLocationChange(idx: number) {
     setLocation(LocationData[idx]);
-    setMapOpen(false);
+    setOpenModal({ ...openModal, location: false });
   }
 
   return (
@@ -47,13 +55,16 @@ export const GamePage = () => {
       />
 
       <main className="p-6 grid grid-cols-1 lg:grid-cols-3 grow backdrop-blur-sm">
-        <Sidebar location={location} setMapOpen={setMapOpen} />
+        <Sidebar
+          location={location}
+          setMapOpen={() => setOpenModal({ ...openModal, location: true })}
+        />
 
         {/* <h1>Game Page Aul suka titid gede</h1> */}
 
         <LocationModal
-          mapOpen={mapOpen}
-          setMapOpen={setMapOpen}
+          mapOpen={openModal.location}
+          setMapOpen={() => setOpenModal({ ...openModal, location: false })}
           handleLocationChange={handleLocationChange}
         />
       </main>
@@ -66,7 +77,7 @@ function Sidebar({
   setMapOpen,
 }: {
   location: LocationType;
-  setMapOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setMapOpen: () => void;
 }) {
   const { user, toggleStatus } = useUser();
   const { belajar, makan, main, tidur } = user.status;
@@ -96,7 +107,7 @@ function Sidebar({
             ))}
             <Button
               color="bg-blue-500 hover:bg-blue-400"
-              onClick={() => setMapOpen(true)}
+              onClick={() => setMapOpen()}
             >
               Change Location
             </Button>
@@ -109,7 +120,7 @@ function Sidebar({
 
 type LocationModalProps = {
   mapOpen: boolean;
-  setMapOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setMapOpen: () => void;
   handleLocationChange: (idx: number) => void;
 };
 
@@ -122,7 +133,7 @@ function LocationModal({
     <OverlayModal
       title="Choose Location"
       isOpen={mapOpen}
-      onClose={() => setMapOpen(false)}
+      onClose={() => setMapOpen()}
       className="col-start-3 col-end-4"
       disableFloat={true}
     >
