@@ -41,6 +41,14 @@ export const GamePage = () => {
     setOpenModal({ ...openModal, location: false });
   }
 
+  function handleClickModal(modal: keyof ModalType, value: boolean) {
+    let key: keyof ModalType;
+    for (key in openModal) {
+      openModal[key] = false;
+    }
+    setOpenModal({ ...openModal, [modal]: value });
+  }
+
   return (
     <div
       className={`h-screen relative flex flex-col bg-cover`}
@@ -55,10 +63,7 @@ export const GamePage = () => {
       />
 
       <main className="p-6 grid grid-cols-1 lg:grid-cols-3 grow backdrop-blur-sm">
-        <Sidebar
-          location={location}
-          setMapOpen={() => setOpenModal({ ...openModal, location: true })}
-        />
+        <Sidebar location={location} setOpenModal={handleClickModal} />
 
         {/* <h1>Game Page Aul suka titid gede</h1> */}
 
@@ -74,17 +79,21 @@ export const GamePage = () => {
 
 function Sidebar({
   location,
-  setMapOpen,
+  setOpenModal,
 }: {
   location: LocationType;
-  setMapOpen: () => void;
+  setOpenModal: (modal: keyof ModalType, value: boolean) => void;
 }) {
   const { user, toggleStatus } = useUser();
   const { belajar, makan, main, tidur } = user.status;
 
   return (
     <div className="flex flex-col gap-4">
-      <GreetingsBar userName={user.name} userMajor={user.major} />
+      <GreetingsBar
+        userName={user.name}
+        userMajor={user.major}
+        onClick={() => setOpenModal("news", true)}
+      />
       <div id="ProgressBar" className="grow">
         <ProgressGroup>
           <ProgressBar value={belajar.state.val} icon="dashicons:book" />
@@ -107,7 +116,7 @@ function Sidebar({
             ))}
             <Button
               color="bg-blue-500 hover:bg-blue-400"
-              onClick={() => setMapOpen()}
+              onClick={() => setOpenModal("location", true)}
             >
               Change Location
             </Button>
@@ -143,3 +152,23 @@ function LocationModal({
     </OverlayModal>
   );
 }
+const NewsModal = ({
+  open,
+  setOpen,
+}: {
+  open: boolean;
+  setOpen: (modal: keyof ModalType, value: boolean) => void;
+}) => {
+  return (
+    <OverlayModal
+      title="News"
+      onClose={() => setOpen("news", false)}
+      isOpen={open}
+      className="col-start-3 col-end-4"
+      disableFloat={true}
+    >
+      {/* TODO: print newsnya disini, kasih bentuk card gitu
+      (kalo bisa, bikin component terpisah untuk cardnya) */}
+    </OverlayModal>
+  );
+};
