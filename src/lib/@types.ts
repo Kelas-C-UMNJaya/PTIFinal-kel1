@@ -1,9 +1,10 @@
 import { Duration } from "date-fns";
 
 export type GameContextType = {
-  location: LocationType | null; 
+  location: LocationType; 
   time: Date;
-  updateTime: () => void
+  updateTime: () => void;
+  setLocation: React.Dispatch<LocationType>;
 };
 
 export interface ComponentProps {
@@ -71,6 +72,11 @@ export type ReducerReturn = {
     growth: number;
     shrink: number;
   };
+} | {
+  type: "setVal";
+  payload: number;
+} | {
+  type: "resetRate";
 } | {
   type: "resetRate";
 } | {

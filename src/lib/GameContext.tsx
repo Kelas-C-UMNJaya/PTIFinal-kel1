@@ -2,6 +2,8 @@ import { addMinutes, format, startOfToday } from "date-fns";
 import { useState, useEffect, createContext, useContext } from "react";
 import { GameContextType, ProviderProps, LocationType } from "./@types";
 
+import { Location as LocationData } from "@/data/Location";
+
 const GameContext = createContext<GameContextType | undefined>(undefined);
 
 export const useGameData = () => {
@@ -13,7 +15,7 @@ export const useGameData = () => {
 };
 
 export const GameProvider = ({ children }: ProviderProps) => {
-  const [location, setLocation] = useState<LocationType | null>(null);
+  const [location, setLocation] = useState<LocationType>(LocationData[0]);
   const [time, setTime] = useState(startOfToday());
   const updateTime = () => {
     setTime((prevTime) => addMinutes(prevTime, 1));
@@ -22,6 +24,7 @@ export const GameProvider = ({ children }: ProviderProps) => {
     time,
     location,
     updateTime,
+    setLocation,
   };
 
   return (
