@@ -5,6 +5,11 @@ export type GameContextType = {
   time: Date;
   updateTime: () => void;
   setLocation: React.Dispatch<LocationType>;
+  gameClock: {
+    status: boolean;
+    start: () => void;
+    stop: () => void;
+  }
 };
 
 export interface ComponentProps {

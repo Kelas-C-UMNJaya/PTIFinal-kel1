@@ -18,15 +18,14 @@ import { Location as LocationData } from "@/data/Location";
 export const GamePage = () => {
   const navigate = useNavigate();
   const { updateStatus } = useUser();
-  const { time, location, updateTime, setLocation } = useGameData();
+  const { time, location, setLocation, gameClock } = useGameData();
   const [mapOpen, setMapOpen] = useState(false);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      updateStatus();
-      updateTime();
-    }, 1000);
-    return () => clearInterval(interval);
+    gameClock.start();
+    return () => {
+      gameClock.stop();
+    };
   }, []);
 
   function handleLocationChange(idx: number) {
@@ -46,22 +45,17 @@ export const GamePage = () => {
         date={format(time, "E, dd MMMM yyyy")}
         onClick={() => navigate("/")}
       />
+
       <main className="p-6 grid grid-cols-1 lg:grid-cols-3 grow backdrop-blur-sm">
         <Sidebar location={location} setMapOpen={setMapOpen} />
+
         {/* <h1>Game Page Aul suka titid gede</h1> */}
-        <OverlayModal
-          title="Choose Location"
-          isOpen={mapOpen}
-          onClose={() => setMapOpen(false)}
-          className="col-start-3 col-end-4"
-          disableFloat={true}
-        >
-          {LocationData.map((loc, idx) => (
-            <Button onClick={() => handleLocationChange(idx)}>
-              {loc.name}
-            </Button>
-          ))}
-        </OverlayModal>
+
+        <LocationModal
+          mapOpen={mapOpen}
+          setMapOpen={setMapOpen}
+          handleLocationChange={handleLocationChange}
+        />
       </main>
     </div>
   );
@@ -74,7 +68,7 @@ function Sidebar({
   location: LocationType;
   setMapOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-  const { user, updateStatus, toggleStatus } = useUser();
+  const { user, toggleStatus } = useUser();
   const { belajar, makan, main, tidur } = user.status;
 
   return (
@@ -91,20 +85,15 @@ function Sidebar({
       <div id="Button" className="mt-auto">
         <ButtonGroup>
           <ButtonGroup>
-            {location.actions.map(
-              (
-                loc,
-                idx // TODO: Ganti indexnya biar bisa pindah ke lokasi lain
-              ) => (
-                <Button
-                  key={idx}
-                  active={user.status[loc.status.name].state.isActive}
-                  onClick={() => toggleStatus(loc.status.name)}
-                >
-                  {loc.name}
-                </Button>
-              )
-            )}
+            {location.actions.map((loc, idx) => (
+              <Button
+                key={idx}
+                active={user.status[loc.status.name].state.isActive}
+                onClick={() => toggleStatus(loc.status.name)}
+              >
+                {loc.name}
+              </Button>
+            ))}
             <Button
               color="bg-blue-500 hover:bg-blue-400"
               onClick={() => setMapOpen(true)}
@@ -115,5 +104,31 @@ function Sidebar({
         </ButtonGroup>
       </div>
     </div>
+  );
+}
+
+type LocationModalProps = {
+  mapOpen: boolean;
+  setMapOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  handleLocationChange: (idx: number) => void;
+};
+
+function LocationModal({
+  mapOpen,
+  setMapOpen,
+  handleLocationChange,
+}: LocationModalProps) {
+  return (
+    <OverlayModal
+      title="Choose Location"
+      isOpen={mapOpen}
+      onClose={() => setMapOpen(false)}
+      className="col-start-3 col-end-4"
+      disableFloat={true}
+    >
+      {LocationData.map((loc, idx) => (
+        <Button onClick={() => handleLocationChange(idx)}>{loc.name}</Button>
+      ))}
+    </OverlayModal>
   );
 }

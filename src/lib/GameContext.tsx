@@ -1,6 +1,7 @@
 import { addMinutes, format, startOfToday } from "date-fns";
 import { useState, useEffect, createContext, useContext } from "react";
 import { GameContextType, ProviderProps, LocationType } from "./@types";
+import { useUser } from "@/lib/UserContext";
 
 import { Location as LocationData } from "@/data/Location";
 
@@ -16,15 +17,41 @@ export const useGameData = () => {
 
 export const GameProvider = ({ children }: ProviderProps) => {
   const [location, setLocation] = useState<LocationType>(LocationData[0]);
+  const [clockRun, setClockRun] = useState<boolean>(true);
   const [time, setTime] = useState(startOfToday());
+  let interval: NodeJS.Timer;
   const updateTime = () => {
     setTime((prevTime) => addMinutes(prevTime, 1));
   };
+
+  const { updateStatus } = useUser();
+
+  const startClock = () => {
+    interval = setInterval(() => {
+      updateStatus();
+      updateTime();
+    }, 1000);
+    setClockRun(true);
+    console.log(`Clock run is now ${clockRun}`);
+  };
+
+  // TODO: Fixed the pause clock behaviour
+  const stopClock = () => {
+    clearInterval(interval);
+    setClockRun(false);
+    console.log(`Clock run is now ${clockRun}`);
+  };
+
   const GameData: GameContextType = {
     time,
     location,
     updateTime,
     setLocation,
+    gameClock: {
+      status: clockRun,
+      start: startClock,
+      stop: stopClock,
+    },
   };
 
   return (

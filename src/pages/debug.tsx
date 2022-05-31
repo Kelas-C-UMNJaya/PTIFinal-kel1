@@ -9,21 +9,22 @@ import { useState } from "react";
 
 export const DebugPage = () => {
   const { user, updateStatus, toggleStatus, changeData } = useUser();
-  const { time, updateTime } = useGameData();
+  const { time, updateTime, gameClock } = useGameData();
   const { belajar, makan, tidur, main } = user.status;
   const [locationIdx, setLocationIdx] = useState(0);
   useEffect(() => {
-    const interval = setInterval(() => {
-      updateStatus();
-      updateTime();
-    }, 1000);
-    return () => clearInterval(interval);
+    gameClock.start();
+    return () => {
+      gameClock.stop();
+    };
   }, []);
+
   return (
     <div className="bg-zinc-900 text-gray-200 mx-auto h-screen flex items-center justify-center flex-col gap-5">
       <h3 className="text-3xl font-bold">
         Hello, {user.name} from {user.major}
       </h3>
+      <p>Clock is {gameClock.status ? "active" : "not active"}</p>
       <p>{format(time, "HH:mm | E, dd MMMM yyyy")}</p>
 
       <ProgressGroup className="w-[32em]">
@@ -92,8 +93,8 @@ export const DebugPage = () => {
           <Button
             onClick={() =>
               user.name === "Agus"
-                ? changeData("Bambang", "DKV")
-                : changeData("Agus", "Informatika")
+                ? changeData({ name: "Bambang", major: "DKV" })
+                : changeData({ name: "Agus", major: "Informatika" })
             }
           >
             Change User
@@ -105,6 +106,14 @@ export const DebugPage = () => {
             }}
           >
             Change Location
+          </Button>
+          <Button
+            onClick={() => {
+              gameClock.status ? gameClock.stop() : gameClock.start();
+            }}
+            active={gameClock.status}
+          >
+            Toggle Clock
           </Button>
         </ButtonGroup>
       </div>
