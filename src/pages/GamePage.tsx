@@ -20,6 +20,7 @@ export const GamePage = () => {
   const { updateStatus } = useUser();
   const { time, location, updateTime, setLocation } = useGameData();
   const [mapOpen, setMapOpen] = useState(false);
+  const [newsOpen, setNewsOpen] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -47,7 +48,11 @@ export const GamePage = () => {
         onClick={() => navigate("/")}
       />
       <main className="p-6 grid grid-cols-1 lg:grid-cols-3 grow backdrop-blur-sm">
-        <Sidebar location={location} setMapOpen={setMapOpen} />
+        <Sidebar
+          location={location}
+          setMapOpen={setMapOpen}
+          setNewsOpen={setNewsOpen}
+        />
         {/* <h1>Game Page Aul suka titid gede</h1> */}
         <OverlayModal
           title="Choose Location"
@@ -62,6 +67,7 @@ export const GamePage = () => {
             </Button>
           ))}
         </OverlayModal>
+        <NewsModal open={newsOpen} setOpen={setNewsOpen} />
       </main>
     </div>
   );
@@ -70,16 +76,22 @@ export const GamePage = () => {
 function Sidebar({
   location,
   setMapOpen,
+  setNewsOpen,
 }: {
   location: LocationType;
   setMapOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setNewsOpen: React.Dispatch<boolean>;
 }) {
-  const { user, updateStatus, toggleStatus } = useUser();
+  const { user, toggleStatus } = useUser();
   const { belajar, makan, main, tidur } = user.status;
 
   return (
     <div className="flex flex-col gap-4">
-      <GreetingsBar userName={user.name} userMajor={user.major} />
+      <GreetingsBar
+        userName={user.name}
+        userMajor={user.major}
+        onClick={() => setNewsOpen(true)}
+      />
       <div id="ProgressBar" className="grow">
         <ProgressGroup>
           <ProgressBar value={belajar.state.val} icon="dashicons:book" />
@@ -90,30 +102,49 @@ function Sidebar({
       </div>
       <div id="Button" className="mt-auto">
         <ButtonGroup>
-          <ButtonGroup>
-            {location.actions.map(
-              (
-                loc,
-                idx // TODO: Ganti indexnya biar bisa pindah ke lokasi lain
-              ) => (
-                <Button
-                  key={idx}
-                  active={user.status[loc.status.name].state.isActive}
-                  onClick={() => toggleStatus(loc.status.name)}
-                >
-                  {loc.name}
-                </Button>
-              )
-            )}
-            <Button
-              color="bg-blue-500 hover:bg-blue-400"
-              onClick={() => setMapOpen(true)}
-            >
-              Change Location
-            </Button>
-          </ButtonGroup>
+          {location.actions.map(
+            (
+              loc,
+              idx // TODO: Ganti indexnya biar bisa pindah ke lokasi lain
+            ) => (
+              <Button
+                key={idx}
+                active={user.status[loc.status.name].state.isActive}
+                onClick={() => toggleStatus(loc.status.name)}
+              >
+                {loc.name}
+              </Button>
+            )
+          )}
+          <Button
+            color="bg-blue-500 hover:bg-blue-400"
+            onClick={() => setMapOpen(true)}
+          >
+            Change Location
+          </Button>
         </ButtonGroup>
       </div>
     </div>
   );
 }
+
+const NewsModal = ({
+  open,
+  setOpen,
+}: {
+  open: boolean;
+  setOpen: React.Dispatch<boolean>;
+}) => {
+  return (
+    <OverlayModal
+      title="News"
+      onClose={() => setOpen(false)}
+      isOpen={open}
+      className="col-start-3 col-end-4"
+      disableFloat={true}
+    >
+      {/* TODO: print newsnya disini, kasih bentuk card gitu
+      (kalo bisa, bikin component terpisah untuk cardnya) */}
+    </OverlayModal>
+  );
+};

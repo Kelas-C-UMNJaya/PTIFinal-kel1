@@ -92,8 +92,8 @@ export const DebugPage = () => {
           <Button
             onClick={() =>
               user.name === "Agus"
-                ? changeData("Bambang", "DKV")
-                : changeData("Agus", "Informatika")
+                ? changeData({ name: "Bambang", major: "DKV" })
+                : changeData({ name: "Agus", major: "Informatika" })
             }
           >
             Change User
