@@ -6,6 +6,7 @@ interface ButtonProps extends ComponentProps {
   children: string | string[];
   active?: Boolean;
   color?: TailwindColorValue;
+  disabled?: boolean;
 }
 
 export const Button: React.FunctionComponent<ButtonProps> = ({
@@ -13,6 +14,7 @@ export const Button: React.FunctionComponent<ButtonProps> = ({
   children,
   className,
   active = false,
+  disabled = false,
   color,
 }) => {
   return (
@@ -21,9 +23,12 @@ export const Button: React.FunctionComponent<ButtonProps> = ({
         !color
           ? active
             ? "bg-sky-500 hover:bg-sky-400"
-            : "bg-slate-500 hover:bg-slate-400"
-          : ""
-      } ${color}`}
+            : disabled
+            ? "bg-orange-800"
+            : "bg-slate-500 hover:bg-slate-400 "
+          : color
+      } 
+      ${disabled ? "cursor-not-allowed" : ""}`}
       onClick={onClick}
     >
       {children}

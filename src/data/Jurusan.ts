@@ -6,17 +6,17 @@ export const jurusan: JurusanType[] = [
     matkul: [
       {
         name: "Kalkulus",
-        val: 1,
+        val: 15,
         duration: 5
       },
       {
         name: "Perkenalan Teknologi Internet",
-        val: 1,
+        val: 14,
         duration: 3
       },
       {
         name: "Algoritma Struktur Data",
-        val: 1,
+        val: 9,
         duration: 3
       }
     ]

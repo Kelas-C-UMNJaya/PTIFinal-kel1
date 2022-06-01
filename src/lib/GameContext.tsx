@@ -1,4 +1,4 @@
-import { addMinutes, format, startOfToday } from "date-fns";
+import { addHours, addMinutes, format, startOfToday } from "date-fns";
 import { useState, useEffect, createContext, useContext } from "react";
 import { GameContextType, ProviderProps, LocationType } from "./@types";
 import { useUser } from "@/lib/UserContext";
@@ -35,6 +35,10 @@ export const GameProvider = ({ children }: ProviderProps) => {
     console.log(`Clock run is now ${clockRun}`);
   };
 
+  const changeClock = (hour: number) => {
+    setTime(addHours(time, hour));
+  };
+
   // TODO: Fixed the pause clock behaviour
   const stopClock = () => {
     clearInterval(interval);
@@ -49,7 +53,9 @@ export const GameProvider = ({ children }: ProviderProps) => {
     setLocation,
     gameClock: {
       status: clockRun,
+      val: time,
       start: startClock,
+      change: changeClock,
       stop: stopClock,
     },
   };

@@ -12,8 +12,8 @@ import {
   ButtonGroup,
   OverlayModal,
 } from "@/components";
-import { LocationType, Player } from "@/lib/@types";
-import { Location as LocationData } from "@/data/Location";
+import { LocationType, Player, MatkulType } from "@/lib/@types";
+import { Location as LocationData, isStillTime } from "@/data/Location";
 import { jurusan as JurusanData } from "@/data/Jurusan";
 
 type ModalType = {
@@ -21,10 +21,14 @@ type ModalType = {
   location: boolean;
   matkul: boolean;
 };
+type LocationModalProps = {
+  mapOpen: boolean;
+  setMapOpen: () => void;
+  handleLocationChange: (idx: number) => void;
+};
 
 export const GamePage = () => {
   const navigate = useNavigate();
-  const { updateStatus } = useUser();
   const { time, location, setLocation, gameClock } = useGameData();
   const [openModal, setOpenModal] = useState<ModalType>({
     news: false,
@@ -40,8 +44,10 @@ export const GamePage = () => {
   }, []);
 
   function handleLocationChange(idx: number) {
-    setLocation(LocationData[idx]);
-    setOpenModal({ ...openModal, location: false });
+    if (isStillTime(time.getHours(), LocationData[idx].time)) {
+      setLocation(LocationData[idx]);
+      setOpenModal({ ...openModal, location: false });
+    }
   }
 
   function handleClickModal(modal: keyof ModalType, value: boolean) {
@@ -136,17 +142,12 @@ function Sidebar({
   );
 }
 
-type LocationModalProps = {
-  mapOpen: boolean;
-  setMapOpen: () => void;
-  handleLocationChange: (idx: number) => void;
-};
-
 function LocationModal({
   mapOpen,
   setMapOpen,
   handleLocationChange,
 }: LocationModalProps) {
+  const { time } = useGameData();
   return (
     <OverlayModal
       title="Choose Location"
@@ -155,9 +156,18 @@ function LocationModal({
       className="col-start-3 col-end-4"
       disableFloat={true}
     >
-      {LocationData.map((loc, idx) => (
-        <Button onClick={() => handleLocationChange(idx)}>{loc.name}</Button>
-      ))}
+      {LocationData.map((loc, idx) => {
+        let isActive = isStillTime(time.getHours(), loc.time);
+        return (
+          <Button
+            key={idx}
+            disabled={!isActive}
+            onClick={() => handleLocationChange(idx)}
+          >
+            {loc.name}
+          </Button>
+        );
+      })}
     </OverlayModal>
   );
 }
@@ -190,6 +200,17 @@ const MatkulModal = ({
   setOpen: (modal: keyof ModalType, value: boolean) => void;
 }) => {
   const { user } = useUser();
+  const { gameClock } = useGameData();
+
+  const handleMatkulChange = (matkul: MatkulType) => {
+    user.status.belajar.dispatch({
+      type: "setVal",
+      payload: matkul.val,
+    });
+    gameClock.change(matkul.duration);
+    setOpen("matkul", false);
+  };
+
   return (
     <OverlayModal
       title="Mata Kuliah"
@@ -199,7 +220,9 @@ const MatkulModal = ({
       disableFloat={true}
     >
       {user.major.matkul.map((matkul, idx) => (
-        <Button>{matkul.name}</Button>
+        <Button key={idx} onClick={() => handleMatkulChange(matkul)}>
+          {matkul.name}
+        </Button>
       ))}
     </OverlayModal>
   );

@@ -7,7 +7,9 @@ export type GameContextType = {
   setLocation: React.Dispatch<LocationType>;
   gameClock: {
     status: boolean;
+    val: Date;
     start: () => void;
+    change: (hour: number) => void;
     stop: () => void;
   }
 };
@@ -70,6 +72,7 @@ export interface LocationActionType {
 export interface LocationType {
   name: string;
   bgImg: string;
+  time?: {start: number, end: number};
   actions: LocationActionType[] 
 }
   
