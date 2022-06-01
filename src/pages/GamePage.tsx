@@ -17,6 +17,16 @@ import { Location as LocationData } from "@/data/Location";
 import axios from "axios";
 import React from 'react';
 
+type NewsType = {
+  title: string;
+  description: string;
+  publishedAt: string;
+  // id: string;
+  source: {
+    name: string;
+    id: string;
+  };
+}
 
 export const GamePage = () => {
   const navigate = useNavigate();
@@ -37,6 +47,50 @@ export const GamePage = () => {
     setLocation(LocationData[idx]);
     setMapOpen(false);
   }
+
+  
+
+  //title, description, publishedAt
+
+  //fetch data and store it in a state
+  const [newsApi, setNewsApi] = useState<NewsType[]>([]);
+  const [data, setData] = useState<NewsType[]>([]);
+
+  let newsInterval: NodeJS.Timer;
+  
+  async function fetchNews() {
+    const url = 'https://newsapi.org/v2/top-headlines?country=id&apiKey=2b36ad8a386149b9b1c95942d736a457';
+    try {
+      let res = await axios.get(url)
+      if(res.status === 200){
+        setNewsApi(res.data.articles);
+      }
+      return res.data.articles;
+    } catch (err) {
+        console.log(err);
+    }
+  }
+  
+  const [index, setIndex] = useState(0);
+  const [start, setStart] = useState(false);
+  useEffect(() => {
+    fetchNews().then(data => {
+      setStart(true);
+    })
+  }, [])
+
+  useEffect(() => {
+    if(start && index < newsApi.length){
+      console.log(start);
+      newsInterval = setInterval(() => {
+        setData(prev => [...prev, newsApi[index]]);
+        setIndex(index + 1);
+      }, 1000);
+    } else {
+      clearInterval(newsInterval);
+    }
+    return () => clearInterval(newsInterval);
+  }, [start, index])
 
   return (
     <div
@@ -70,7 +124,7 @@ export const GamePage = () => {
               </Button>
             ))}
           </OverlayModal>
-          <NewsModal open={newsOpen} setOpen={setNewsOpen} />
+          <NewsModal newsData={data} open={newsOpen} setOpen={setNewsOpen} />
         </main>
     </div>
   );
@@ -133,36 +187,15 @@ function Sidebar({
   );
 }
 
-//https://newsapi.org/v2/everything?q=Apple&from=2022-05-31&sortBy=popularity&apiKey=c801e6ec5fbb42ca9079e3eb645db8ad
-
 const NewsModal = ({
+  newsData,
   open,
   setOpen,
 }: {
+  newsData: NewsType[];
   open: boolean;
   setOpen: React.Dispatch<boolean>;
 }) => {
-  type NewsType = {
-    title: string;
-    description: string;
-    publishedAt: string;
-    // id: string;
-  }
-
-  const [data, setData] = useState<NewsType[]>([]);
-
-  const url = 'https://newsapi.org/v2/everything?q=Apple&from=2022-05-31&sortBy=popularity&apiKey=c801e6ec5fbb42ca9079e3eb645db8ad';
-
-  //title, description, publishedAt
-
-  useEffect(() => {
-    axios
-      .get(url)
-      .then(res => {
-        setData(res.data.articles);
-      })
-  }, []);
-
   return (
     <OverlayModal
       title="News"
@@ -174,13 +207,17 @@ const NewsModal = ({
       {/* TODO: print newsnya disini, kasih bentuk card gitu
       (kalo bisa, bikin component terpisah untuk cardnya) */}
 
-      {data && data.map(news => (
-        <a href="#" className="block p-6 max-w-xl bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 dark:bg-gray-600 dark:border-gray-500 dark:hover:bg-gray-700">
-        <h6 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{news.title}</h6>
-        <p className="font-normal text-gray-700 dark:text-gray-400">{news.description}</p>
-        <p className="text-gray-600 dark:text-gray-400">{news.publishedAt}</p>
-        </a>
+      {newsData.map((news, idx) => (
+        <div key={idx} className="flex flex-col">
+            <a href="#" className="block p-6 max-w-xl bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 dark:bg-gray-600 dark:border-gray-500 dark:hover:bg-gray-700" >
+            <h6 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white" >{news.title}</h6>
+            <p className="font-normal text-gray-700 dark:text-gray-400 truncate">{news.description}</p>
+            <p className="text-slate-50 dark:text-slate-50 mt-2">{news.publishedAt}</p>
+            <p className="text-slate-50 dark:text-slate-50 mt-2">{news.source.name}</p>
+            </a>
+        </div>
       ))}
+      
     </OverlayModal>
   );
 };
