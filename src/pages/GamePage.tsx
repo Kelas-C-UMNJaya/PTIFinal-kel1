@@ -30,7 +30,7 @@ type LocationModalProps = {
 
 export const GamePage = () => {
   const navigate = useNavigate();
-  const { time, location, setLocation, gameClock } = useGameData();
+  const { location, setLocation, gameClock } = useGameData();
   const { user } = useUser();
   const [openModal, setOpenModal] = useState<ModalType>({
     news: false,
@@ -46,7 +46,7 @@ export const GamePage = () => {
   }, []);
 
   function handleLocationChange(idx: number) {
-    if (isStillTime(time.getHours(), LocationData[idx].time)) {
+    if (isStillTime(gameClock.time.getHours(), LocationData[idx].time)) {
       setLocation(LocationData[idx]);
       setOpenModal({ ...openModal, location: false });
     }
@@ -68,8 +68,8 @@ export const GamePage = () => {
       }}
     >
       <TopBar
-        clock={format(time, "HH:mm")}
-        date={format(time, "E, dd MMMM yyyy")}
+        clock={format(gameClock.time, "HH:mm")}
+        date={format(gameClock.time, "E, dd MMMM yyyy")}
         onClick={() => navigate("/")}
       />
 
@@ -164,7 +164,7 @@ function LocationModal({
   setMapOpen,
   handleLocationChange,
 }: LocationModalProps) {
-  const { time } = useGameData();
+  const { gameClock } = useGameData();
   return (
     <OverlayModal
       title="Choose Location"
@@ -174,7 +174,7 @@ function LocationModal({
       disableFloat={true}
     >
       {LocationData.map((loc, idx) => {
-        let isActive = isStillTime(time.getHours(), loc.time);
+        let isActive = isStillTime(gameClock.time.getHours(), loc.time);
         return (
           <Button
             key={idx}

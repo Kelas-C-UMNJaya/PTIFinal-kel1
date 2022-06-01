@@ -1,17 +1,16 @@
-import { Duration } from "date-fns";
+export type GameClockType = {
+  time: Date,
+  isActive: boolean,
+  start: () => NodeJS.Timer,
+  callback: () => void,
+  stop: () => void,
+  change: (hour: number) => void,
+}
 
 export type GameContextType = {
   location: LocationType; 
-  time: Date;
-  updateTime: () => void;
   setLocation: React.Dispatch<LocationType>;
-  gameClock: {
-    status: boolean;
-    val: Date;
-    start: () => void;
-    change: (hour: number) => void;
-    stop: () => void;
-  }
+  gameClock: GameClockType; 
 };
 
 export interface ComponentProps {
