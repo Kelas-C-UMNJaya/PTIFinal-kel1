@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "@/lib/UserContext";
 import { useGameData } from "@/lib/GameContext";
-import { format } from "date-fns";
+import { format, parseISO } from "date-fns";
 import {
   TopBar,
   GreetingsBar,
@@ -99,18 +99,17 @@ export const GamePage = () => {
   const [index, setIndex] = useState(0);
   const [start, setStart] = useState(false);
   useEffect(() => {
-    fetchNews().then((data) => {
+    fetchNews().then(() => {
       setStart(true);
     });
   }, []);
 
   useEffect(() => {
     if (start && index < newsApi.length) {
-      console.log(start);
       newsInterval = setInterval(() => {
-        setData((prev) => [...prev, newsApi[index]]);
+        setData((prev) => [newsApi[index], ...prev]);
         setIndex(index + 1);
-      }, 1000);
+      }, 30000);
     } else {
       clearInterval(newsInterval);
     }
@@ -281,7 +280,7 @@ const NewsModal = ({
               {news.description}
             </p>
             <p className="text-slate-50 dark:text-slate-50 mt-2">
-              {news.publishedAt}
+              {format(parseISO(news.publishedAt), "dd MMMM yyyy")}
             </p>
             <p className="text-slate-50 dark:text-slate-50 mt-2">
               {news.source.name}
