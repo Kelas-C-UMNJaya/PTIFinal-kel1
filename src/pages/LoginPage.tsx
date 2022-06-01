@@ -44,9 +44,9 @@ export const LoginPage = () => {
         <AboutButton onClick={() => console.log("Aul suka titid gede")} />{" "}
         {/* TODO: kasih Modal */}
       </div>
-      <h1 className="text-center text-red-600">
+      {/* <h1 className="text-center text-red-600">
         Halo semua, Aul suka yg pas ditangan
-      </h1>
+      </h1> */}
       {move == 0 ? (
         <AvatarSelect
           onClick={(img) => {
@@ -55,20 +55,20 @@ export const LoginPage = () => {
           }}
         />
       ) : (
-        <LoginPage2 avatarImg={user.avatar} onBack={() => setMove(0)} />
+        <InputBioPage avatarImg={user.avatar} onBack={() => setMove(0)} />
       )}
     </div>
   );
 };
 
-const LoginPage2 = ({
+const InputBioPage = ({
   avatarImg,
   onBack,
 }: {
   avatarImg: string;
   onBack: () => void;
 }) => {
-  const { user, changeData } = useUser();
+  const { changeData } = useUser();
   const name = useRef<HTMLInputElement>(null);
   const jurusan = useRef<HTMLSelectElement>(null);
   const navigate = useNavigate();
@@ -91,8 +91,10 @@ const LoginPage2 = ({
     navigate("/game");
   };
   return (
-    <div className="flex flex-col md:flex-row justify-center items-center my-14 bg-white p-12 rounded-lg gap-5">
-      <img src={avatarImg} className="object-contain h-96 w-96" />
+    <div className="flex flex-col md:flex-row justify-center items-center bg-slate-700 p-6 md:p-12 rounded-lg gap-5">
+      <div className="max-h-[300px] max-w-[300px]">
+        <img src={avatarImg} className="object-contain w-full h-full" />
+      </div>
       <div className="flex flex-col gap-5">
         <input
           type="name"
@@ -127,10 +129,6 @@ const LoginPage2 = ({
               </option>
             );
           })}
-          ;
-          {/* <option value="Informatika">Informatitid</option>
-            <option value="Ilmu Komunikasi">Ilmu Komunikatid</option>
-            <option value="Sistem Informatika">Sistem Informatid</option> */}
         </select>
         <div className="flex flex-row gap-5 justify-between">
           <Button onClick={handleSubmit}>Start</Button>
@@ -143,24 +141,20 @@ const LoginPage2 = ({
 
 const AvatarSelect = ({ onClick }: { onClick: (img: string) => void }) => {
   return (
-    <div className="container flex flex-col mx-auto gap-12 items-center justify-center bg-white p-12 rounded-lg">
-      <h1 className="text-2xl md:text-5xl">Pilih Avatar</h1>
+    <div className="container flex flex-col mx-auto gap-6 md:gap-12 items-center justify-center bg-slate-700 p-5 rounded-lg">
+      <h1 className="text-4xl md:text-5xl text-white">Pilih Avatar</h1>
 
       <div className="grid grid-cols-2 grid-rows-2 md:grid-rows-1 gap-6 lg:grid-cols-4">
         {avatar.map((img, idx) => {
           return (
             <div
               key={idx}
-              className=" lg:w-full md:w-1/2 rounded hover:shadow-2xl"
+              className="bg-white rounded hover:shadow-2xl p-3"
               onClick={() => {
                 onClick(img);
               }}
             >
-              <img
-                src={img}
-                className="object-contain lg:h-96 lg:w-96"
-                alt="image"
-              />
+              <img src={img} className="object-contain" alt="image" />
             </div>
           );
         })}

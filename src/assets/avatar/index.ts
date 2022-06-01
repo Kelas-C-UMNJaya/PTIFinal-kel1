@@ -9,3 +9,5 @@ export const avatar = [
   avatar3,
   avatar4,
 ];
+
+export {default as body} from './body.png';

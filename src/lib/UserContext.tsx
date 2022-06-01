@@ -3,6 +3,7 @@ import { useState, createContext, useContext } from "react";
 import { useStatus } from "./useStatus";
 import { ProviderProps } from "./@types";
 import { jurusan } from "@/data/Jurusan";
+import { avatar } from "@/assets/avatar";
 
 export const UserContext = createContext<PlayerContext | undefined>(undefined);
 
@@ -17,7 +18,7 @@ export const useUser = () => {
 export const UserProvider = ({ children }: ProviderProps) => {
   const [data, setData] = useState<PlayerBio>({
     name: "Agus",
-    avatar: "",
+    avatar: avatar[0],
     major: jurusan[0],
   });
 

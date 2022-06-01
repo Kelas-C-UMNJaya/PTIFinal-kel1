@@ -11,6 +11,7 @@ import {
   Button,
   ButtonGroup,
   OverlayModal,
+  AvatarBody,
 } from "@/components";
 import { LocationType, Player, MatkulType } from "@/lib/@types";
 import { Location as LocationData, isStillTime } from "@/data/Location";
@@ -30,6 +31,7 @@ type LocationModalProps = {
 export const GamePage = () => {
   const navigate = useNavigate();
   const { time, location, setLocation, gameClock } = useGameData();
+  const { user } = useUser();
   const [openModal, setOpenModal] = useState<ModalType>({
     news: false,
     location: false,
@@ -76,6 +78,7 @@ export const GamePage = () => {
 
         {/* <h1>Game Page Aul suka titid gede</h1> */}
 
+        <AvatarBody className="col-start-2 col-end-3" head={user.avatar} />
         <LocationModal
           mapOpen={openModal.location}
           setMapOpen={() => setOpenModal({ ...openModal, location: false })}
