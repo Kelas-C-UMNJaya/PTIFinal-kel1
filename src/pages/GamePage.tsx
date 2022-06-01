@@ -15,7 +15,7 @@ import {
 import { LocationType, Player } from "@/lib/@types";
 import { Location as LocationData } from "@/data/Location";
 import axios from "axios";
-import React from 'react';
+import React from "react";
 
 type NewsType = {
   title: string;
@@ -26,7 +26,7 @@ type NewsType = {
     name: string;
     id: string;
   };
-}
+};
 
 export const GamePage = () => {
   const navigate = useNavigate();
@@ -48,8 +48,6 @@ export const GamePage = () => {
     setMapOpen(false);
   }
 
-  
-
   //title, description, publishedAt
 
   //fetch data and store it in a state
@@ -57,40 +55,41 @@ export const GamePage = () => {
   const [data, setData] = useState<NewsType[]>([]);
 
   let newsInterval: NodeJS.Timer;
-  
+
   async function fetchNews() {
-    const url = 'https://newsapi.org/v2/top-headlines?country=id&apiKey=2b36ad8a386149b9b1c95942d736a457';
+    const url =
+      "https://newsapi.org/v2/top-headlines?country=id&apiKey=2b36ad8a386149b9b1c95942d736a457";
     try {
-      let res = await axios.get(url)
-      if(res.status === 200){
+      let res = await axios.get(url);
+      if (res.status === 200) {
         setNewsApi(res.data.articles);
       }
       return res.data.articles;
     } catch (err) {
-        console.log(err);
+      console.log(err);
     }
   }
-  
+
   const [index, setIndex] = useState(0);
   const [start, setStart] = useState(false);
   useEffect(() => {
-    fetchNews().then(data => {
+    fetchNews().then((data) => {
       setStart(true);
-    })
-  }, [])
+    });
+  }, []);
 
   useEffect(() => {
-    if(start && index < newsApi.length){
+    if (start && index < newsApi.length) {
       console.log(start);
       newsInterval = setInterval(() => {
-        setData(prev => [...prev, newsApi[index]]);
+        setData((prev) => [...prev, newsApi[index]]);
         setIndex(index + 1);
       }, 1000);
     } else {
       clearInterval(newsInterval);
     }
     return () => clearInterval(newsInterval);
-  }, [start, index])
+  }, [start, index]);
 
   return (
     <div
@@ -99,33 +98,33 @@ export const GamePage = () => {
         backgroundImage: `url(${location.bgImg})`,
       }}
     >
-          <TopBar
-            clock={format(time, "HH:mm")}
-            date={format(time, "E, dd MMMM yyyy")}
-            onClick={() => navigate("/")}
-          />
-        <main className="p-6 grid grid-cols-1 grid-row-2 lg:grid-cols-3 grow backdrop-blur-sm shrink">
-          <Sidebar
-            location={location}
-            setMapOpen={setMapOpen}
-            setNewsOpen={setNewsOpen}
-          />
-          {/* <h1>Game Page AUL suka TITID GEDE (>15cm) </h1> */}
-          <OverlayModal
-            title="Choose Location"
-            isOpen={mapOpen}
-            onClose={() => setMapOpen(false)}
-            className="col-start-3 col-end-4"
-            disableFloat={true}
-          >
-            {LocationData.map((loc, idx) => (
-              <Button onClick={() => handleLocationChange(idx)}>
-                {loc.name}
-              </Button>
-            ))}
-          </OverlayModal>
-          <NewsModal newsData={data} open={newsOpen} setOpen={setNewsOpen} />
-        </main>
+      <TopBar
+        clock={format(time, "HH:mm")}
+        date={format(time, "E, dd MMMM yyyy")}
+        onClick={() => navigate("/")}
+      />
+      <main className="p-6 grid grid-cols-1 grid-row-2 lg:grid-cols-3 grow backdrop-blur-sm shrink">
+        <Sidebar
+          location={location}
+          setMapOpen={setMapOpen}
+          setNewsOpen={setNewsOpen}
+        />
+        {/* <h1>Game Page AUL suka TITID GEDE (>15cm) </h1> */}
+        <OverlayModal
+          title="Choose Location"
+          isOpen={mapOpen}
+          onClose={() => setMapOpen(false)}
+          className="col-start-3 col-end-4"
+          disableFloat={true}
+        >
+          {LocationData.map((loc, idx) => (
+            <Button onClick={() => handleLocationChange(idx)}>
+              {loc.name}
+            </Button>
+          ))}
+        </OverlayModal>
+        <NewsModal newsData={data} open={newsOpen} setOpen={setNewsOpen} />
+      </main>
     </div>
   );
 };
@@ -204,20 +203,27 @@ const NewsModal = ({
       className="col-start-3 col-end-4 overflow-y-auto overflow-x-hidde"
       disableFloat={true}
     >
-      {/* TODO: print newsnya disini, kasih bentuk card gitu
-      (kalo bisa, bikin component terpisah untuk cardnya) */}
-
       {newsData.map((news, idx) => (
         <div key={idx} className="flex flex-col">
-            <a href="#" className="block p-6 max-w-xl bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 dark:bg-gray-600 dark:border-gray-500 dark:hover:bg-gray-700" >
-            <h6 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white" >{news.title}</h6>
-            <p className="font-normal text-gray-700 dark:text-gray-400 truncate">{news.description}</p>
-            <p className="text-slate-50 dark:text-slate-50 mt-2">{news.publishedAt}</p>
-            <p className="text-slate-50 dark:text-slate-50 mt-2">{news.source.name}</p>
-            </a>
+          <a
+            href="#"
+            className="block p-6 max-w-xl bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 dark:bg-gray-600 dark:border-gray-500 dark:hover:bg-gray-700"
+          >
+            <h6 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+              {news.title}
+            </h6>
+            <p className="font-normal text-gray-700 dark:text-gray-400 truncate">
+              {news.description}
+            </p>
+            <p className="text-slate-50 dark:text-slate-50 mt-2">
+              {news.publishedAt}
+            </p>
+            <p className="text-slate-50 dark:text-slate-50 mt-2">
+              {news.source.name}
+            </p>
+          </a>
         </div>
       ))}
-      
     </OverlayModal>
   );
 };
