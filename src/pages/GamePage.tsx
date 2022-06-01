@@ -78,7 +78,7 @@ export const GamePage = () => {
 
         {/* <h1>Game Page Aul suka titid gede</h1> */}
 
-        <AvatarBody className="col-start-2 col-end-3" head={user.avatar} />
+        {/* <AvatarBody className="col-start-2 col-end-3" head={user.avatar} /> */}
         <LocationModal
           mapOpen={openModal.location}
           setMapOpen={() => setOpenModal({ ...openModal, location: false })}
@@ -106,6 +106,7 @@ function Sidebar({
       <GreetingsBar
         userName={user.name}
         userMajor={user.major.name}
+        userImg={user.avatar}
         onClick={() => setOpenModal("news", true)}
       />
       <div id="ProgressBar" className="grow">
@@ -132,12 +133,22 @@ function Sidebar({
                 {loc.name}
               </Button>
             ))}
-            <Button
-              color="bg-blue-500 hover:bg-blue-400"
-              onClick={() => setOpenModal("location", true)}
-            >
-              Change Location
-            </Button>
+            <div className="flex flex-col md:flex-row justify-evenly gap-3">
+              <Button
+                color="bg-blue-500 hover:bg-blue-400"
+                onClick={() => setOpenModal("location", true)}
+                className="grow"
+              >
+                Change Location
+              </Button>
+              <Button
+                color="bg-yellow-600 hover:bg-yellow-500"
+                onClick={() => setOpenModal("news", true)}
+                className="grow"
+              >
+                News
+              </Button>
+            </div>
           </ButtonGroup>
         </ButtonGroup>
       </div>

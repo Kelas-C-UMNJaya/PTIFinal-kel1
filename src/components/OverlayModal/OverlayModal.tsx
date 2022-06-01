@@ -21,11 +21,11 @@ export const OverlayModal = ({
   }
   return (
     <div
-      className={`flex flex-col gap-3 rounded-lg p-5 z-50 transition-opacity duration-300 ease-in-out bg-slate-800 text-white
+      className={`inset-0 absolute md:relative m-5 md:m-0 flex flex-col gap-3 rounded-lg p-5 z-50 transition-opacity duration-300 ease-in-out bg-slate-800 text-white
       ${!disableFloat ? "inset-0 absolute" : ""} ${className}`}
     >
-      <div className="flex justify-between">
-        <h1 className="text-3xl font-bold">{title}</h1>
+      <div className="flex justify-between items-center">
+        <h1 className="text-2xl md:text-3xl font-bold">{title}</h1>
         <Button className="min-w-0" onClick={onClose}>
           Close
         </Button>
