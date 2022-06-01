@@ -1,10 +1,16 @@
-import { Duration } from "date-fns";
+export type GameClockType = {
+  time: Date,
+  isActive: boolean,
+  start: () => NodeJS.Timer,
+  callback: () => void,
+  stop: () => void,
+  change: (hour: number) => void,
+}
 
 export type GameContextType = {
   location: LocationType; 
-  time: Date;
-  updateTime: () => void;
   setLocation: React.Dispatch<LocationType>;
+  gameClock: GameClockType; 
 };
 
 export interface ComponentProps {
@@ -30,11 +36,14 @@ export type StatusReturn = {
   state: PlayerStatus;
   dispatch: React.Dispatch<ReducerReturn>;
 };
-  
-export interface Player {
+
+export interface PlayerBio {
   name: string;
   avatar: string;
-  major: string;
+  major: JurusanType;
+}
+  
+export interface Player extends PlayerBio {
   status: {
     belajar: StatusReturn;
     makan: StatusReturn;
@@ -46,7 +55,7 @@ export interface PlayerContext {
   user: Player;
   updateStatus: () => void;
   toggleStatus: (val: keyof Player["status"] | void) => void;
-  changeData: ({name, major, avatar}: {name?: string, major?: string, avatar?:string}) => void;
+  changeData: ({name, major, avatar}: {name?: string, major?: JurusanType, avatar?:string}) => void;
 }
 
 export interface LocationActionType {
@@ -55,12 +64,14 @@ export interface LocationActionType {
     name: keyof Player["status"]; 
     growth?: number;
     shrink?: number;
+    modal?: string;
   };
 }
 
 export interface LocationType {
   name: string;
   bgImg: string;
+  time?: {start: number, end: number};
   actions: LocationActionType[] 
 }
   

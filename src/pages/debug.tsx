@@ -9,22 +9,25 @@ import { useState } from "react";
 
 export const DebugPage = () => {
   const { user, updateStatus, toggleStatus, changeData } = useUser();
-  const { time, updateTime } = useGameData();
+  const { gameClock } = useGameData();
   const { belajar, makan, tidur, main } = user.status;
   const [locationIdx, setLocationIdx] = useState(0);
+
+  const [pause, setPause] = useState(false);
   useEffect(() => {
-    const interval = setInterval(() => {
-      updateStatus();
-      updateTime();
-    }, 1000);
-    return () => clearInterval(interval);
-  }, []);
+    pause ? gameClock.stop() : gameClock.start();
+    return () => {
+      gameClock.stop();
+    };
+  }, [pause]);
+
   return (
     <div className="bg-zinc-900 text-gray-200 mx-auto h-screen flex items-center justify-center flex-col gap-5">
       <h3 className="text-3xl font-bold">
-        Hello, {user.name} from {user.major}
+        Hello, {user.name} from {user.major.name}
       </h3>
-      <p>{format(time, "HH:mm | E, dd MMMM yyyy")}</p>
+      <p>Clock is {!pause ? "active" : "not active"}</p>
+      <p>{format(gameClock.time, "HH:mm | E, dd MMMM yyyy")}</p>
 
       <ProgressGroup className="w-[32em]">
         <ProgressBar
@@ -90,21 +93,24 @@ export const DebugPage = () => {
 
         <ButtonGroup className="justify-center">
           <Button
-            onClick={() =>
-              user.name === "Agus"
-                ? changeData({ name: "Bambang", major: "DKV" })
-                : changeData({ name: "Agus", major: "Informatika" })
-            }
-          >
-            Change User
-          </Button>
-          <Button
             onClick={() => {
               locationIdx == 0 ? setLocationIdx(1) : setLocationIdx(0);
               toggleStatus();
             }}
           >
             Change Location
+          </Button>
+          <Button
+            onClick={() => {
+              if (pause) {
+                setPause(false);
+              } else {
+                setPause(true);
+              }
+            }}
+            active={pause}
+          >
+            Toggle Pause
           </Button>
         </ButtonGroup>
       </div>

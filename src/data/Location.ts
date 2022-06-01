@@ -1,28 +1,15 @@
 import { LocationType } from "@/lib/@types"
 import umnBg from "@/assets/background/umn.jpg"
 import testBg from "@/assets/background/test.jpg"
+import {useGameData} from "@/lib/GameContext"
+import { isWithinInterval } from "date-fns"
+
+export const isStillTime = (clockNow: number, time: {start: number, end: number} | undefined) => {
+  if (time === undefined) return true
+  return isWithinInterval(clockNow, {start: time.start, end: time.end});
+}
 
 export const Location: LocationType[] = [
-  {
-    name: "Kampus",
-    bgImg: umnBg,
-    actions: [
-      {
-        name: "Kuliah",
-        status: {
-          name: "belajar",
-          growth: 0.4,
-        }
-      },
-      {
-        name: "Makan",
-        status: {
-          name: "makan",
-          growth: 2,
-        }
-      },
-    ]
-  },
   {
     name: "Rumah",
     bgImg: testBg,
@@ -51,6 +38,31 @@ export const Location: LocationType[] = [
           shrink: 0.4,
         }
       }
+    ]
+  },
+  {
+    name: "Kampus",
+    bgImg: umnBg,
+    time: {
+      start: 8,
+      end: 18
+    },
+    actions: [
+      {
+        name: "Kuliah",
+        status: {
+          name: "belajar",
+          growth: 0.4,
+          modal: "matkul"
+        }
+      },
+      {
+        name: "Makan",
+        status: {
+          name: "makan",
+          growth: 2,
+        }
+      },
     ]
   },
   {

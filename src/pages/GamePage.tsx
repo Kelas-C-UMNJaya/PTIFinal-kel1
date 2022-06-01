@@ -11,9 +11,8 @@ import {
   Button,
   ButtonGroup,
   OverlayModal,
+  AvatarBody,
 } from "@/components";
-import { LocationType, Player } from "@/lib/@types";
-import { Location as LocationData } from "@/data/Location";
 import axios from "axios";
 import React from "react";
 
@@ -28,24 +27,51 @@ type NewsType = {
   };
 };
 
+import { LocationType, Player, MatkulType } from "@/lib/@types";
+import { Location as LocationData, isStillTime } from "@/data/Location";
+import { jurusan as JurusanData } from "@/data/Jurusan";
+
+type ModalType = {
+  news: boolean;
+  location: boolean;
+  matkul: boolean;
+};
+type LocationModalProps = {
+  mapOpen: boolean;
+  setMapOpen: () => void;
+  handleLocationChange: (idx: number) => void;
+};
+
 export const GamePage = () => {
   const navigate = useNavigate();
-  const { updateStatus } = useUser();
-  const { time, location, updateTime, setLocation } = useGameData();
-  const [mapOpen, setMapOpen] = useState(false);
-  const [newsOpen, setNewsOpen] = useState(false);
+  const { location, setLocation, gameClock } = useGameData();
+  const { user } = useUser();
+  const [openModal, setOpenModal] = useState<ModalType>({
+    news: false,
+    location: false,
+    matkul: false,
+  });
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      updateStatus();
-      updateTime();
-    }, 1000);
-    return () => clearInterval(interval);
+    gameClock.start();
+    return () => {
+      gameClock.stop();
+    };
   }, []);
 
   function handleLocationChange(idx: number) {
-    setLocation(LocationData[idx]);
-    setMapOpen(false);
+    if (isStillTime(gameClock.time.getHours(), LocationData[idx].time)) {
+      setLocation(LocationData[idx]);
+      setOpenModal({ ...openModal, location: false });
+    }
+  }
+
+  function handleClickModal(modal: keyof ModalType, value: boolean) {
+    let key: keyof ModalType;
+    for (key in openModal) {
+      openModal[key] = false;
+    }
+    setOpenModal({ ...openModal, [modal]: value });
   }
 
   //title, description, publishedAt
@@ -99,31 +125,31 @@ export const GamePage = () => {
       }}
     >
       <TopBar
-        clock={format(time, "HH:mm")}
-        date={format(time, "E, dd MMMM yyyy")}
+        clock={format(gameClock.time, "HH:mm")}
+        date={format(gameClock.time, "E, dd MMMM yyyy")}
         onClick={() => navigate("/")}
       />
-      <main className="p-6 grid grid-cols-1 grid-row-2 lg:grid-cols-3 grow backdrop-blur-sm shrink">
-        <Sidebar
-          location={location}
-          setMapOpen={setMapOpen}
-          setNewsOpen={setNewsOpen}
+
+      <main className="p-6 grid grid-cols-1 lg:grid-cols-3 grow backdrop-blur-sm gap-3">
+        <Sidebar location={location} setOpenModal={handleClickModal} />
+
+        {/* <h1>Game Page Aul suka titid gede</h1> */}
+
+        <AvatarBody
+          className="hidden lg:flex col-start-2 col-end-3"
+          head={user.avatar}
         />
-        {/* <h1>Game Page AUL suka TITID GEDE (>15cm) </h1> */}
-        <OverlayModal
-          title="Choose Location"
-          isOpen={mapOpen}
-          onClose={() => setMapOpen(false)}
-          className="col-start-3 col-end-4"
-          disableFloat={true}
-        >
-          {LocationData.map((loc, idx) => (
-            <Button onClick={() => handleLocationChange(idx)}>
-              {loc.name}
-            </Button>
-          ))}
-        </OverlayModal>
-        <NewsModal newsData={data} open={newsOpen} setOpen={setNewsOpen} />
+        <LocationModal
+          mapOpen={openModal.location}
+          setMapOpen={() => setOpenModal({ ...openModal, location: false })}
+          handleLocationChange={handleLocationChange}
+        />
+        <NewsModal
+          newsData={data}
+          open={openModal.news}
+          setOpen={handleClickModal}
+        />
+        <MatkulModal open={openModal.matkul} setOpen={handleClickModal} />
       </main>
     </div>
   );
@@ -132,13 +158,11 @@ export const GamePage = () => {
 function Sidebar({
   className,
   location,
-  setMapOpen,
-  setNewsOpen,
+  setOpenModal,
 }: {
   className?: string;
   location: LocationType;
-  setMapOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setNewsOpen: React.Dispatch<boolean>;
+  setOpenModal: (modal: keyof ModalType, value: boolean) => void;
 }) {
   const { user, toggleStatus } = useUser();
   const { belajar, makan, main, tidur } = user.status;
@@ -147,8 +171,9 @@ function Sidebar({
     <div className={`flex flex-col gap-4 ${className}`}>
       <GreetingsBar
         userName={user.name}
-        userMajor={user.major}
-        onClick={() => setNewsOpen(true)}
+        userMajor={user.major.name}
+        userImg={user.avatar}
+        onClick={() => setOpenModal("news", true)}
       />
       <div id="ProgressBar" className="grow">
         <ProgressGroup>
@@ -160,32 +185,72 @@ function Sidebar({
       </div>
       <div id="Button" className="mt-auto">
         <ButtonGroup>
-          {location.actions.map(
-            (
-              loc,
-              idx // TODO: Ganti indexnya biar bisa pindah ke lokasi lain
-            ) => (
+          <ButtonGroup>
+            {location.actions.map((loc, idx) => (
               <Button
                 key={idx}
                 active={user.status[loc.status.name].state.isActive}
-                onClick={() => toggleStatus(loc.status.name)}
+                onClick={() =>
+                  loc.status.modal
+                    ? setOpenModal("matkul", true)
+                    : toggleStatus(loc.status.name)
+                }
               >
                 {loc.name}
               </Button>
-            )
-          )}
-          <Button
-            color="bg-blue-500 hover:bg-blue-400"
-            onClick={() => setMapOpen(true)}
-          >
-            Change Location
-          </Button>
+            ))}
+            <div className="flex flex-col md:flex-row justify-evenly gap-3">
+              <Button
+                color="bg-blue-500 hover:bg-blue-400"
+                onClick={() => setOpenModal("location", true)}
+                className="grow"
+              >
+                Change Location
+              </Button>
+              <Button
+                color="bg-yellow-600 hover:bg-yellow-500"
+                onClick={() => setOpenModal("news", true)}
+                className="grow"
+              >
+                News
+              </Button>
+            </div>
+          </ButtonGroup>
         </ButtonGroup>
       </div>
     </div>
   );
 }
 
+function LocationModal({
+  mapOpen,
+  setMapOpen,
+  handleLocationChange,
+}: LocationModalProps) {
+  const { gameClock } = useGameData();
+  return (
+    <OverlayModal
+      title="Choose Location"
+      isOpen={mapOpen}
+      onClose={() => setMapOpen()}
+      className="col-start-3 col-end-4"
+      disableFloat={true}
+    >
+      {LocationData.map((loc, idx) => {
+        let isActive = isStillTime(gameClock.time.getHours(), loc.time);
+        return (
+          <Button
+            key={idx}
+            disabled={!isActive}
+            onClick={() => handleLocationChange(idx)}
+          >
+            {loc.name}
+          </Button>
+        );
+      })}
+    </OverlayModal>
+  );
+}
 const NewsModal = ({
   newsData,
   open,
@@ -193,12 +258,12 @@ const NewsModal = ({
 }: {
   newsData: NewsType[];
   open: boolean;
-  setOpen: React.Dispatch<boolean>;
+  setOpen: (modal: keyof ModalType, value: boolean) => void;
 }) => {
   return (
     <OverlayModal
       title="News"
-      onClose={() => setOpen(false)}
+      onClose={() => setOpen("news", false)}
       isOpen={open}
       className="col-start-3 col-end-4 overflow-y-auto overflow-x-hidde"
       disableFloat={true}
@@ -223,6 +288,42 @@ const NewsModal = ({
             </p>
           </a>
         </div>
+      ))}
+    </OverlayModal>
+  );
+};
+
+const MatkulModal = ({
+  open,
+  setOpen,
+}: {
+  open: boolean;
+  setOpen: (modal: keyof ModalType, value: boolean) => void;
+}) => {
+  const { user } = useUser();
+  const { gameClock } = useGameData();
+
+  const handleMatkulChange = (matkul: MatkulType) => {
+    user.status.belajar.dispatch({
+      type: "setVal",
+      payload: matkul.val,
+    });
+    gameClock.change(matkul.duration);
+    setOpen("matkul", false);
+  };
+
+  return (
+    <OverlayModal
+      title="Mata Kuliah"
+      onClose={() => setOpen("matkul", false)}
+      isOpen={open}
+      className="col-start-3 col-end-4"
+      disableFloat={true}
+    >
+      {user.major.matkul.map((matkul, idx) => (
+        <Button key={idx} onClick={() => handleMatkulChange(matkul)}>
+          {matkul.name}
+        </Button>
       ))}
     </OverlayModal>
   );
