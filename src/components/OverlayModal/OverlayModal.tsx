@@ -18,7 +18,6 @@ export const OverlayModal = ({
   disableFloat,
 }: ModalProps) => {
   
-
   return (
     <AnimatePresence>
       {isOpen &&<motion.div

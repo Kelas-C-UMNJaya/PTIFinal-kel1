@@ -63,7 +63,7 @@ export const GamePage = () => {
 
   return (
     <div
-      className={`h-screen relative flex flex-col bg-cover overflow-x-none`}
+      className={`h-screen relative flex flex-col bg-cover overflow-x-none transition-all`}
       style={{
         backgroundImage: `url(${location.bgImg})`,
       }}
@@ -123,7 +123,7 @@ function Sidebar({
       </div>
       <div id="Button" className="mt-auto">
         <ButtonGroup>
-          <ButtonGroup>
+          <AnimatePresence>
             {location.actions.map((loc, idx) => (
               <Button
                 key={idx}
@@ -153,7 +153,7 @@ function Sidebar({
                 News
               </Button>
             </div>
-          </ButtonGroup>
+          </AnimatePresence>
         </ButtonGroup>
       </div>
     </div>
@@ -189,6 +189,7 @@ function LocationModal({
     </OverlayModal>
   );
 }
+
 const NewsModal = ({
   open,
   setOpen,

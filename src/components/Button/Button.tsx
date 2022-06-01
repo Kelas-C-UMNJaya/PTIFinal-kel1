@@ -1,5 +1,6 @@
 import { ComponentProps } from "@/lib/@types";
 import { TailwindColorValue } from "tailwindcss/tailwind-config";
+import { motion } from "framer-motion";
 
 interface ButtonProps extends ComponentProps {
   onClick?: () => void;
@@ -18,7 +19,11 @@ export const Button: React.FunctionComponent<ButtonProps> = ({
   color,
 }) => {
   return (
-    <button
+    <motion.button
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        exit={{scale: 0}}
+        transition={{delay: 0.3, type: "easeInOut", duration: 0.1}}
       className={`${className} min-w-[150px] px-3 py-2 rounded-lg text-white transition ${
         !color
           ? active
@@ -32,6 +37,6 @@ export const Button: React.FunctionComponent<ButtonProps> = ({
       onClick={onClick}
     >
       {children}
-    </button>
+    </motion.button>
   );
 };
