@@ -16,10 +16,10 @@ import "./index.css";
 const MainRoute = () => {
   return (
     <Routes>
-      <Route path="/" element={<App />} />
+      {/* <Route path="/" element={<App />} /> */}
       <Route path="/debug" element={<DebugPage />} />
       <Route path="/game" element={<GamePage />} />
-      <Route path="/avatar" element={<LoginPage />} />
+      <Route path="/" element={<LoginPage />} />
     </Routes>
   );
 };

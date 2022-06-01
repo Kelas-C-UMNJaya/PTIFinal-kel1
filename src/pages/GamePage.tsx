@@ -73,12 +73,15 @@ export const GamePage = () => {
         onClick={() => navigate("/")}
       />
 
-      <main className="p-6 grid grid-cols-1 lg:grid-cols-3 grow backdrop-blur-sm">
+      <main className="p-6 grid grid-cols-1 lg:grid-cols-3 grow backdrop-blur-sm gap-3">
         <Sidebar location={location} setOpenModal={handleClickModal} />
 
         {/* <h1>Game Page Aul suka titid gede</h1> */}
 
-        {/* <AvatarBody className="col-start-2 col-end-3" head={user.avatar} /> */}
+        <AvatarBody
+          className="hidden lg:flex col-start-2 col-end-3"
+          head={user.avatar}
+        />
         <LocationModal
           mapOpen={openModal.location}
           setMapOpen={() => setOpenModal({ ...openModal, location: false })}
