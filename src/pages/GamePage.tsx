@@ -16,6 +16,7 @@ import {
 import { LocationType, Player, MatkulType } from "@/lib/@types";
 import { Location as LocationData, isStillTime } from "@/data/Location";
 import { jurusan as JurusanData } from "@/data/Jurusan";
+import { AnimatePresence } from "framer-motion";
 
 type ModalType = {
   news: boolean;
@@ -62,7 +63,7 @@ export const GamePage = () => {
 
   return (
     <div
-      className={`h-screen relative flex flex-col bg-cover`}
+      className={`h-screen relative flex flex-col bg-cover overflow-x-none`}
       style={{
         backgroundImage: `url(${location.bgImg})`,
       }}
@@ -73,7 +74,7 @@ export const GamePage = () => {
         onClick={() => navigate("/")}
       />
 
-      <main className="p-6 grid grid-cols-1 lg:grid-cols-3 grow backdrop-blur-sm gap-3">
+      <main className="p-6 grid grid-cols-1 lg:grid-cols-3 grow backdrop-blur-sm gap-3 overflow-hidden">
         <Sidebar location={location} setOpenModal={handleClickModal} />
 
         {/* <h1>Game Page Aul suka titid gede</h1> */}
