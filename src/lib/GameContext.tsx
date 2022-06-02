@@ -1,6 +1,17 @@
-import { addHours, addMinutes, format, startOfWeek, startOfToday } from "date-fns";
+import {
+  addHours,
+  addMinutes,
+  format,
+  startOfWeek,
+  startOfToday,
+} from "date-fns";
 import { useState, useEffect, createContext, useContext } from "react";
-import { GameContextType, ProviderProps, LocationType } from "./@types";
+import {
+  GameContextType,
+  ProviderProps,
+  LocationType,
+  GameClockType,
+} from "./@types";
 import { useUser } from "@/lib/UserContext";
 
 import { Location as LocationData } from "@/data/Location";
@@ -15,49 +26,53 @@ export const useGameData = () => {
   return context;
 };
 
-export const GameProvider = ({ children }: ProviderProps) => {
-  const [location, setLocation] = useState<LocationType>(LocationData[0]);
-  const [clockRun, setClockRun] = useState<boolean>(true);
-  const [time, setTime] = useState(startOfWeek(startOfToday()));
+const gameClock = () => {
+  const { updateStatus } = useUser();
+  const [time, setTime] = useState(startOfToday());
   let interval: NodeJS.Timer;
   const updateTime = () => {
     setTime((prevTime) => addMinutes(prevTime, 1));
   };
 
-  const { updateStatus } = useUser();
+  let clockRun: boolean = false;
+
+  const callback = () => {
+    updateStatus();
+    updateTime();
+  };
 
   const startClock = () => {
-    interval = setInterval(() => {
-      updateStatus();
-      updateTime();
-    }, 1000);
-    setClockRun(true);
-    console.log(`Clock run is now ${clockRun}`);
+    interval = setInterval(callback, 1000);
+    return interval;
   };
 
   const changeClock = (hour: number) => {
     setTime(addHours(time, hour));
   };
 
-  // TODO: Fixed the pause clock behaviour
   const stopClock = () => {
     clearInterval(interval);
-    setClockRun(false);
-    console.log(`Clock run is now ${clockRun}`);
   };
 
-  const GameData: GameContextType = {
+  const returnType: GameClockType = {
     time,
+    isActive: clockRun,
+    start: startClock,
+    stop: stopClock,
+    change: changeClock,
+    callback,
+  };
+
+  return returnType;
+};
+
+export const GameProvider = ({ children }: ProviderProps) => {
+  const [location, setLocation] = useState<LocationType>(LocationData[0]);
+
+  const GameData: GameContextType = {
     location,
-    updateTime,
     setLocation,
-    gameClock: {
-      status: clockRun,
-      val: time,
-      start: startClock,
-      change: changeClock,
-      stop: stopClock,
-    },
+    gameClock: gameClock(),
   };
 
   return (

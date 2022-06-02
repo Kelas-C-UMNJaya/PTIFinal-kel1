@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "@/lib/UserContext";
 import { useGameData } from "@/lib/GameContext";
-import { format } from "date-fns";
+import { format, parseISO } from "date-fns";
 import {
   TopBar,
   GreetingsBar,
@@ -13,6 +13,20 @@ import {
   OverlayModal,
   AvatarBody,
 } from "@/components";
+import axios from "axios";
+import React from "react";
+
+type NewsType = {
+  title: string;
+  description: string;
+  publishedAt: string;
+  // id: string;
+  source: {
+    name: string;
+    id: string;
+  };
+};
+
 import { LocationType, Player, MatkulType } from "@/lib/@types";
 import { Location as LocationData, isStillTime } from "@/data/Location";
 import { jurusan as JurusanData } from "@/data/Jurusan";
@@ -31,7 +45,7 @@ type LocationModalProps = {
 
 export const GamePage = () => {
   const navigate = useNavigate();
-  const { time, location, setLocation, gameClock } = useGameData();
+  const { location, setLocation, gameClock } = useGameData();
   const { user } = useUser();
   const [openModal, setOpenModal] = useState<ModalType>({
     news: false,
@@ -47,7 +61,7 @@ export const GamePage = () => {
   }, []);
 
   function handleLocationChange(idx: number) {
-    if (isStillTime(time.getHours(), LocationData[idx].time)) {
+    if (isStillTime(gameClock.time.getHours(), LocationData[idx].time)) {
       setLocation(LocationData[idx]);
       setOpenModal({ ...openModal, location: false });
     }
@@ -61,6 +75,48 @@ export const GamePage = () => {
     setOpenModal({ ...openModal, [modal]: value });
   }
 
+  //title, description, publishedAt
+
+  //fetch data and store it in a state
+  const [newsApi, setNewsApi] = useState<NewsType[]>([]);
+  const [data, setData] = useState<NewsType[]>([]);
+
+  let newsInterval: NodeJS.Timer;
+
+  async function fetchNews() {
+    const url =
+      "https://newsapi.org/v2/top-headlines?country=id&apiKey=2b36ad8a386149b9b1c95942d736a457";
+    try {
+      let res = await axios.get(url);
+      if (res.status === 200) {
+        setNewsApi(res.data.articles);
+      }
+      return res.data.articles;
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  const [index, setIndex] = useState(0);
+  const [start, setStart] = useState(false);
+  useEffect(() => {
+    fetchNews().then(() => {
+      setStart(true);
+    });
+  }, []);
+
+  useEffect(() => {
+    if (start && index < newsApi.length) {
+      newsInterval = setInterval(() => {
+        setData((prev) => [newsApi[index], ...prev]);
+        setIndex(index + 1);
+      }, 30000);
+    } else {
+      clearInterval(newsInterval);
+    }
+    return () => clearInterval(newsInterval);
+  }, [start, index]);
+
   return (
     <div
       className={`h-screen relative flex flex-col bg-cover overflow-x-none transition-all`}
@@ -69,8 +125,8 @@ export const GamePage = () => {
       }}
     >
       <TopBar
-        clock={format(time, "HH:mm")}
-        date={format(time, "E, dd MMMM yyyy")}
+        clock={format(gameClock.time, "HH:mm")}
+        date={format(gameClock.time, "E, dd MMMM yyyy")}
         onClick={() => navigate("/")}
       />
 
@@ -88,7 +144,11 @@ export const GamePage = () => {
           setMapOpen={() => setOpenModal({ ...openModal, location: false })}
           handleLocationChange={handleLocationChange}
         />
-        <NewsModal open={openModal.news} setOpen={handleClickModal} />
+        <NewsModal
+          newsData={data}
+          open={openModal.news}
+          setOpen={handleClickModal}
+        />
         <MatkulModal open={openModal.matkul} setOpen={handleClickModal} />
       </main>
     </div>
@@ -96,9 +156,11 @@ export const GamePage = () => {
 };
 
 function Sidebar({
+  className,
   location,
   setOpenModal,
 }: {
+  className?: string;
   location: LocationType;
   setOpenModal: (modal: keyof ModalType, value: boolean) => void;
 }) {
@@ -106,7 +168,7 @@ function Sidebar({
   const { belajar, makan, main, tidur } = user.status;
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className={`flex flex-col gap-4 ${className}`}>
       <GreetingsBar
         userName={user.name}
         userMajor={user.major.name}
@@ -165,7 +227,7 @@ function LocationModal({
   setMapOpen,
   handleLocationChange,
 }: LocationModalProps) {
-  const { time } = useGameData();
+  const { gameClock } = useGameData();
   return (
     <OverlayModal
       title="Choose Location"
@@ -175,7 +237,7 @@ function LocationModal({
       disableFloat={true}
     >
       {LocationData.map((loc, idx) => {
-        let isActive = isStillTime(time.getHours(), loc.time);
+        let isActive = isStillTime(gameClock.time.getHours(), loc.time);
         return (
           <Button
             key={idx}
@@ -191,9 +253,11 @@ function LocationModal({
 }
 
 const NewsModal = ({
+  newsData,
   open,
   setOpen,
 }: {
+  newsData: NewsType[];
   open: boolean;
   setOpen: (modal: keyof ModalType, value: boolean) => void;
 }) => {
@@ -202,11 +266,30 @@ const NewsModal = ({
       title="News"
       onClose={() => setOpen("news", false)}
       isOpen={open}
-      className="col-start-3 col-end-4"
+      className="col-start-3 col-end-4 overflow-y-auto overflow-x-hidde"
       disableFloat={true}
     >
-      {/* TODO: print newsnya disini, kasih bentuk card gitu
-      (kalo bisa, bikin component terpisah untuk cardnya) */}
+      {newsData.map((news, idx) => (
+        <div key={idx} className="flex flex-col">
+          <a
+            href="#"
+            className="block p-6 max-w-xl bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 dark:bg-gray-600 dark:border-gray-500 dark:hover:bg-gray-700"
+          >
+            <h6 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+              {news.title}
+            </h6>
+            <p className="font-normal text-gray-700 dark:text-gray-400 truncate">
+              {news.description}
+            </p>
+            <p className="text-slate-50 dark:text-slate-50 mt-2">
+              {format(parseISO(news.publishedAt), "dd MMMM yyyy")}
+            </p>
+            <p className="text-slate-50 dark:text-slate-50 mt-2">
+              {news.source.name}
+            </p>
+          </a>
+        </div>
+      ))}
     </OverlayModal>
   );
 };
