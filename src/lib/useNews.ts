@@ -1,5 +1,5 @@
 import axios from "axios";
-import {useState, useEffect} from "react";
+import { useState, useEffect } from "react";
 import { NewsType } from "./@types";
 
 export const useNews = () => {
@@ -7,6 +7,7 @@ export const useNews = () => {
   const [data, setData] = useState<NewsType[]>([]);
   const [index, setIndex] = useState(1);
   const [start, setStart] = useState(false);
+  const [received, setReceived] = useState<Date>();
 
   let newsInterval: NodeJS.Timer;
 
@@ -17,10 +18,12 @@ export const useNews = () => {
       let res = await axios.get(url, {
         params: {
           pageSize: 100,
-        }
+        },
       });
       if (res.status === 200) {
         setNewsApi(res.data.articles);
+        setReceived(new Date());
+        return 1;
       }
       setStart(true);
     } catch (err) {
@@ -39,6 +42,13 @@ export const useNews = () => {
     }
     return () => clearInterval(newsInterval);
   }, [start, index]);
-  
-  return { news: data, fetchNews, isAvailable: start };
-}
+
+  return {
+    news: data,
+    setNewsApi,
+    fetchNews,
+    isAvailable: start,
+    setIsAvailable: setStart,
+    received,
+  };
+};

@@ -17,7 +17,7 @@ export const useUser = () => {
 
 export const UserProvider = ({ children }: ProviderProps) => {
   const [data, setData] = useState<PlayerBio>({
-    name: "Agus",
+    name: "",
     avatar: avatar[0],
     major: jurusan[0],
   });

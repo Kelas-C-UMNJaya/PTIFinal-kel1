@@ -1,5 +1,5 @@
-import { addHours, addMinutes, startOfToday } from "date-fns";
-import { useState, createContext, useContext } from "react";
+import { addHours, addMinutes, startOfToday, startOfWeek } from "date-fns";
+import { useState, createContext, useContext, useEffect } from "react";
 import {
   GameContextType,
   ProviderProps,
@@ -22,7 +22,7 @@ export const useGameData = () => {
 
 const gameClock = () => {
   const { updateStatus } = useUser();
-  const [time, setTime] = useState(startOfToday());
+  const [time, setTime] = useState(startOfWeek(startOfToday()));
   let interval: NodeJS.Timer;
   const updateTime = () => {
     setTime((prevTime) => addMinutes(prevTime, 1));
