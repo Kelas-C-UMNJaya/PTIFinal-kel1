@@ -7,6 +7,7 @@ import {
   ButtonGroup,
 } from "@/components";
 import { Icon } from "@iconify/react";
+import { motion } from "framer-motion";
 
 import { avatar } from "@/assets/avatar";
 import { useState, useRef } from "react";
@@ -91,7 +92,12 @@ const InputBioPage = ({
     navigate("/game");
   };
   return (
-    <div className="flex flex-col md:flex-row justify-center items-center bg-slate-700 p-6 md:p-12 rounded-lg gap-5">
+    <motion.div
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        exit={{scale: 0}}
+        transition={{delay: 0.1, type: "easeInOut", duration: 0.1}}
+        className="flex flex-col md:flex-row justify-center items-center bg-slate-700 p-6 md:p-12 rounded-lg gap-5">
       <div className="max-h-[300px] max-w-[300px]">
         <img src={avatarImg} className="object-contain w-full h-full" />
       </div>
@@ -143,7 +149,7 @@ const InputBioPage = ({
           </Button>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
@@ -152,12 +158,12 @@ const AvatarSelect = ({ onClick }: { onClick: (img: string) => void }) => {
     <div className="container flex flex-col mx-auto gap-6 md:gap-12 items-center justify-center bg-slate-700 p-5 rounded-lg">
       <h1 className="text-4xl md:text-5xl text-white">Pilih Avatar</h1>
 
-      <div className="grid grid-cols-2 grid-rows-2 md:grid-rows-1 gap-6 lg:grid-cols-4">
+      <div className="grid grid-cols-2 grid-rows-2 md:grid-rows-1 gap-6 lg:grid-cols-4 ">
         {avatar.map((img, idx) => {
           return (
             <div
               key={idx}
-              className="bg-white rounded hover:shadow-2xl p-3"
+              className="bg-white rounded hover:shadow-2xl p-3 transform transition duration-100 hover:scale-110"
               onClick={() => {
                 onClick(img);
               }}

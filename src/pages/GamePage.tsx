@@ -18,7 +18,7 @@ import axios from "axios";
 
 import { LocationType, MatkulType } from "@/lib/@types";
 import { Location as LocationData, isStillTime } from "@/data/Location";
-import { AnimatePresence, LayoutGroup } from "framer-motion";
+import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
 import { useNews } from "@/lib/useNews";
 
 type ModalType = {
@@ -69,51 +69,56 @@ export const GamePage = () => {
   }
 
   return (
-    <div
-      className={`h-screen relative flex flex-col bg-cover overflow-x-none transition-all`}
-      style={{
-        backgroundImage: `url(${location.bgImg})`,
-      }}
-    >
-      <TopBar
-        clock={format(gameClock.time, "HH:mm")}
-        date={format(gameClock.time, "E, dd MMMM yyyy")}
-        onClick={() => navigate("/")}
-      />
-
-      <main className="p-6 grid grid-cols-1 lg:grid-cols-3 grid-rows-1 grow backdrop-blur-sm gap-3 overflow-hidden">
-        <Sidebar location={location} setOpenModal={handleClickModal} />
-        {/* <h1>Game Page Aul suka titid gede</h1> */}
-
-        <AvatarBody
-          className="hidden lg:flex col-start-2 col-end-3"
-          head={user.avatar}
+    <AnimatePresence>
+      <motion.div
+        initial={{ x: 0, opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+        exit={{ x: 0, opacity: 0 }}
+        className={`h-screen relative flex flex-col bg-cover overflow-x-none transition-all`}
+        style={{
+          backgroundImage: `url(${location.bgImg})`,
+        }}
+      >
+        <TopBar
+          clock={format(gameClock.time, "HH:mm")}
+          date={format(gameClock.time, "E, dd MMMM yyyy")}
+          onClick={() => navigate("/")}
         />
-        <div className="col-start-3 col-end-4">
-          <AnimatePresence exitBeforeEnter>
-            {openModal.location && (
-              <LocationModal
-                key="Location"
-                setMapOpen={() =>
-                  setOpenModal({ ...openModal, location: false })
-                }
-                handleLocationChange={handleLocationChange}
-              />
-            )}
-            {openModal.news && (
-              <NewsModal
-                key="News"
-                newsData={news}
-                setOpen={handleClickModal}
-              />
-            )}
-            {openModal.matkul && (
-              <MatkulModal key="Matkul" setOpen={handleClickModal} />
-            )}
-          </AnimatePresence>
-        </div>
-      </main>
-    </div>
+
+        <main className="p-6 grid grid-cols-1 lg:grid-cols-3 grid-rows-1 grow backdrop-blur-sm gap-3 overflow-hidden">
+          <Sidebar location={location} setOpenModal={handleClickModal} />
+          {/* <h1>Game Page Aul suka titid gede</h1> */}
+
+          <AvatarBody
+            className="hidden lg:flex col-start-2 col-end-3"
+            head={user.avatar}
+          />
+          <div className="col-start-3 col-end-4">
+            <AnimatePresence exitBeforeEnter>
+              {openModal.location && (
+                <LocationModal
+                  key="Location"
+                  setMapOpen={() =>
+                    setOpenModal({ ...openModal, location: false })
+                  }
+                  handleLocationChange={handleLocationChange}
+                />
+              )}
+              {openModal.news && (
+                <NewsModal
+                  key="News"
+                  newsData={news}
+                  setOpen={handleClickModal}
+                />
+              )}
+              {openModal.matkul && (
+                <MatkulModal key="Matkul" setOpen={handleClickModal} />
+              )}
+            </AnimatePresence>
+          </div>
+        </main>
+      </motion.div>
+    </AnimatePresence>
   );
 };
 
