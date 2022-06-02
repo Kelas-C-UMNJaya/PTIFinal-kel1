@@ -20,6 +20,7 @@ import { LocationType, MatkulType } from "@/lib/@types";
 import { Location as LocationData, isStillTime } from "@/data/Location";
 import { AnimatePresence, LayoutGroup } from "framer-motion";
 import { useNews } from "@/lib/useNews";
+import { useWeather } from "@/lib/useWeather";
 
 type ModalType = {
   news: boolean;
@@ -41,6 +42,7 @@ export const GamePage = () => {
     matkul: false,
   });
   const { news, fetchNews } = useNews();
+  const { weatherData, fetchWeather } = useWeather();
 
   useEffect(() => {
     gameClock.start();
@@ -51,6 +53,7 @@ export const GamePage = () => {
 
   useEffect(() => {
     fetchNews();
+    fetchWeather();
   }, []);
 
   function handleLocationChange(idx: number) {
@@ -79,6 +82,7 @@ export const GamePage = () => {
         clock={format(gameClock.time, "HH:mm")}
         date={format(gameClock.time, "E, dd MMMM yyyy")}
         onClick={() => navigate("/")}
+        weatherData={weatherData}
       />
 
       <main className="p-6 grid grid-cols-1 lg:grid-cols-3 grid-rows-1 grow backdrop-blur-sm gap-3 overflow-hidden">

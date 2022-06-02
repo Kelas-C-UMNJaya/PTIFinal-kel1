@@ -1,16 +1,16 @@
 export type GameClockType = {
-  time: Date,
-  isActive: boolean,
-  start: () => NodeJS.Timer,
-  callback: () => void,
-  stop: () => void,
-  change: (hour: number) => void,
-}
+  time: Date;
+  isActive: boolean;
+  start: () => NodeJS.Timer;
+  callback: () => void;
+  stop: () => void;
+  change: (hour: number) => void;
+};
 
 export type GameContextType = {
-  location: LocationType; 
+  location: LocationType;
   setLocation: React.Dispatch<LocationType>;
-  gameClock: GameClockType; 
+  gameClock: GameClockType;
 };
 
 export interface ComponentProps {
@@ -21,7 +21,7 @@ export interface ComponentProps {
 
 export interface ProviderProps {
   children: React.ReactNode;
-};
+}
 
 export type PlayerStatus = {
   name: string;
@@ -42,7 +42,7 @@ export interface PlayerBio {
   avatar: string;
   major: JurusanType;
 }
-  
+
 export interface Player extends PlayerBio {
   status: {
     belajar: StatusReturn;
@@ -55,13 +55,21 @@ export interface PlayerContext {
   user: Player;
   updateStatus: () => void;
   toggleStatus: (val: keyof Player["status"] | void) => void;
-  changeData: ({name, major, avatar}: {name?: string, major?: JurusanType, avatar?:string}) => void;
+  changeData: ({
+    name,
+    major,
+    avatar,
+  }: {
+    name?: string;
+    major?: JurusanType;
+    avatar?: string;
+  }) => void;
 }
 
 export interface LocationActionType {
   name: string;
   status: {
-    name: keyof Player["status"]; 
+    name: keyof Player["status"];
     growth?: number;
     shrink?: number;
     modal?: string;
@@ -71,36 +79,42 @@ export interface LocationActionType {
 export interface LocationType {
   name: string;
   bgImg: string;
-  time?: {start: number, end: number};
-  actions: LocationActionType[] 
+  time?: { start: number; end: number };
+  actions: LocationActionType[];
 }
-  
-export type ReducerReturn = {
-  type: "update";
-} | {
-  type: "setRate";
-  payload: {
-    growth: number;
-    shrink: number;
-  };
-} | {
-  type: "setVal";
-  payload: number;
-} | {
-  type: "resetRate";
-} | {
-  type: "resetRate";
-} | {
-  type: "setActive";
-  payload: boolean;
-};
+
+export type ReducerReturn =
+  | {
+      type: "update";
+    }
+  | {
+      type: "setRate";
+      payload: {
+        growth: number;
+        shrink: number;
+      };
+    }
+  | {
+      type: "setVal";
+      payload: number;
+    }
+  | {
+      type: "resetRate";
+    }
+  | {
+      type: "resetRate";
+    }
+  | {
+      type: "setActive";
+      payload: boolean;
+    };
 
 export interface MatkulType {
   name: string;
   val: number;
   duration: number;
 }
-  
+
 export interface JurusanType {
   name: string;
   matkul: MatkulType[];
@@ -109,9 +123,18 @@ export interface JurusanType {
 export type NewsType = {
   title: string;
   description: string;
-  publishedAt: string; 
+  publishedAt: string;
   source: {
     name: string;
     id: string;
+  };
+};
+
+export type WeatherType = {
+  temp: number;
+  weather: {
+    main: string;
+    description: string;
+    icon: string;
   };
 };
