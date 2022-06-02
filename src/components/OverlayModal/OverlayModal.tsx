@@ -27,7 +27,7 @@ export const OverlayModal = ({
         x: "150%",
       }}
       transition={{ type: "spring", bounce: 0, duration: 0.4 }}
-      className={`inset-0 absolute md:relative m-5 md:m-0 flex flex-col gap-3 rounded-lg p-5 z-50 transition-opacity duration-300 ease-in-out bg-slate-800 text-white h-0 min-h-full
+      className={`inset-0 absolute md:relative m-5 md:m-0 flex flex-col gap-3 rounded-lg p-5 z-50 transition-opacity duration-300 ease-in-out bg-slate-800 text-white lg:h-0 lg:min-h-full
       ${!disableFloat ? "inset-0 absolute" : ""} ${className}`}
     >
       <div className="flex justify-between items-center">

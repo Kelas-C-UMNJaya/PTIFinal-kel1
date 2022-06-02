@@ -93,7 +93,7 @@ export const GamePage = () => {
             className="hidden lg:flex col-start-2 col-end-3"
             head={user.avatar}
           />
-          <div className="col-start-3 col-end-4">
+          <div className="lg:col-start-3 lg:col-end-4">
             <AnimatePresence exitBeforeEnter>
               {openModal.location && (
                 <LocationModal
