@@ -137,7 +137,7 @@ export const GamePage = () => {
           className="hidden lg:flex col-start-2 col-end-3"
           head={user.avatar}
         />
-        <div className="col-start-3 col-end-4 overflow-y-auto overflow-x-hidden">
+        <div className="col-start-3 col-end-4">
           <AnimatePresence exitBeforeEnter>
             {openModal.location && (
               <LocationModal
@@ -272,27 +272,29 @@ const NewsModal = ({
       onClose={() => setOpen("news", false)}
       disableFloat={true}
     >
-      {newsData.map((news, idx) => (
-        <div key={idx} className="flex flex-col">
-          <a
-            href="#"
-            className="block p-6 max-w-xl bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 dark:bg-gray-600 dark:border-gray-500 dark:hover:bg-gray-700"
-          >
-            <h6 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-              {news.title}
-            </h6>
-            <p className="font-normal text-gray-700 dark:text-gray-400 truncate">
-              {news.description}
-            </p>
-            <p className="text-slate-50 dark:text-slate-50 mt-2">
-              {format(parseISO(news.publishedAt), "dd MMMM yyyy")}
-            </p>
-            <p className="text-slate-50 dark:text-slate-50 mt-2">
-              {news.source.name}
-            </p>
-          </a>
-        </div>
-      ))}
+      <div className="overflow-hidden overflow-y-auto flex flex-col gap-5">
+        {newsData.map((news, idx) => (
+          <div key={idx} className="flex flex-col">
+            <a
+              href="#"
+              className="block p-6 max-w-xl bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 dark:bg-gray-600 dark:border-gray-500 dark:hover:bg-gray-700"
+            >
+              <h6 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                {news.title}
+              </h6>
+              <p className="font-normal text-gray-700 dark:text-gray-400 truncate">
+                {news.description}
+              </p>
+              <p className="text-slate-50 dark:text-slate-50 mt-2">
+                {format(parseISO(news.publishedAt), "dd MMMM yyyy")}
+              </p>
+              <p className="text-slate-50 dark:text-slate-50 mt-2">
+                {news.source.name}
+              </p>
+            </a>
+          </div>
+        ))}
+      </div>
     </OverlayModal>
   );
 };
