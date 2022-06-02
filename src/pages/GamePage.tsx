@@ -19,8 +19,7 @@ import React from "react";
 type NewsType = {
   title: string;
   description: string;
-  publishedAt: string;
-  // id: string;
+  publishedAt: string; 
   source: {
     name: string;
     id: string;
@@ -74,9 +73,6 @@ export const GamePage = () => {
     setOpenModal({ ...openModal, [modal]: value });
   }
 
-  //title, description, publishedAt
-
-  //fetch data and store it in a state
   const [newsApi, setNewsApi] = useState<NewsType[]>([]);
   const [data, setData] = useState<NewsType[]>([]);
 
@@ -250,6 +246,7 @@ function LocationModal({
     </OverlayModal>
   );
 }
+
 const NewsModal = ({
   newsData,
   open,
