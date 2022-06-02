@@ -1,11 +1,5 @@
-import {
-  addHours,
-  addMinutes,
-  format,
-  startOfWeek,
-  startOfToday,
-} from "date-fns";
-import { useState, useEffect, createContext, useContext } from "react";
+import { addHours, addMinutes, startOfToday } from "date-fns";
+import { useState, createContext, useContext } from "react";
 import {
   GameContextType,
   ProviderProps,
@@ -46,6 +40,10 @@ const gameClock = () => {
     return interval;
   };
 
+  const changeVal = (date: Date) => {
+    setTime(date);
+  };
+
   const changeClock = (hour: number) => {
     setTime(addHours(time, hour));
   };
@@ -60,6 +58,7 @@ const gameClock = () => {
     start: startClock,
     stop: stopClock,
     change: changeClock,
+    changeVal,
     callback,
   };
 
