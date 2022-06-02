@@ -1,3 +1,4 @@
+import { NewsType } from "./../lib/@types";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "@/lib/UserContext";
@@ -14,23 +15,11 @@ import {
   AvatarBody,
 } from "@/components";
 import axios from "axios";
-import React from "react";
 
-type NewsType = {
-  title: string;
-  description: string;
-  publishedAt: string;
-  // id: string;
-  source: {
-    name: string;
-    id: string;
-  };
-};
-
-import { LocationType, Player, MatkulType } from "@/lib/@types";
+import { LocationType, MatkulType } from "@/lib/@types";
 import { Location as LocationData, isStillTime } from "@/data/Location";
-import { jurusan as JurusanData } from "@/data/Jurusan";
 import { AnimatePresence, LayoutGroup } from "framer-motion";
+import { useNews } from "@/lib/useNews";
 
 type ModalType = {
   news: boolean;
@@ -51,12 +40,17 @@ export const GamePage = () => {
     location: false,
     matkul: false,
   });
+  const { news, fetchNews } = useNews();
 
   useEffect(() => {
     gameClock.start();
     return () => {
       gameClock.stop();
     };
+  }, []);
+
+  useEffect(() => {
+    fetchNews();
   }, []);
 
   function handleLocationChange(idx: number) {
@@ -73,48 +67,6 @@ export const GamePage = () => {
     }
     setOpenModal({ ...openModal, [modal]: value });
   }
-
-  //title, description, publishedAt
-
-  //fetch data and store it in a state
-  const [newsApi, setNewsApi] = useState<NewsType[]>([]);
-  const [data, setData] = useState<NewsType[]>([]);
-
-  let newsInterval: NodeJS.Timer;
-
-  async function fetchNews() {
-    const url =
-      "https://newsapi.org/v2/top-headlines?country=id&apiKey=2b36ad8a386149b9b1c95942d736a457";
-    try {
-      let res = await axios.get(url);
-      if (res.status === 200) {
-        setNewsApi(res.data.articles);
-      }
-      return res.data.articles;
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
-  const [index, setIndex] = useState(0);
-  const [start, setStart] = useState(false);
-  useEffect(() => {
-    fetchNews().then(() => {
-      setStart(true);
-    });
-  }, []);
-
-  useEffect(() => {
-    if (start && index < newsApi.length) {
-      newsInterval = setInterval(() => {
-        setData((prev) => [newsApi[index], ...prev]);
-        setIndex(index + 1);
-      }, 30000);
-    } else {
-      clearInterval(newsInterval);
-    }
-    return () => clearInterval(newsInterval);
-  }, [start, index]);
 
   return (
     <div
@@ -151,7 +103,7 @@ export const GamePage = () => {
             {openModal.news && (
               <NewsModal
                 key="News"
-                newsData={data}
+                newsData={news}
                 setOpen={handleClickModal}
               />
             )}
@@ -266,6 +218,7 @@ const NewsModal = ({
   newsData: NewsType[];
   setOpen: (modal: keyof ModalType, value: boolean) => void;
 }) => {
+  const { isAvailable } = useNews();
   return (
     <OverlayModal
       title="News"
