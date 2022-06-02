@@ -105,3 +105,13 @@ export interface JurusanType {
   name: string;
   matkul: MatkulType[];
 }
+
+export type NewsType = {
+  title: string;
+  description: string;
+  publishedAt: string; 
+  source: {
+    name: string;
+    id: string;
+  };
+};

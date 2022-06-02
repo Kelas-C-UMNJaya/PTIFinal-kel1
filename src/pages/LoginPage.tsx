@@ -17,7 +17,7 @@ import { ComponentProps } from "@/lib/@types";
 import { useUser } from "@/lib/UserContext";
 import { jurusan as JurusanData } from "@/data/Jurusan";
 
-import umnBg from "@/assets/background/umn.jpg";
+import umnBg from "@/assets/background/umn-pagi.png";
 
 interface ButtonProps extends ComponentProps {
   onClick: () => void;

@@ -1,6 +1,7 @@
 import { LocationType } from "@/lib/@types"
-import umnBg from "@/assets/background/umn.jpg"
+import umnBg from "@/assets/background/umn-siang.jpg"
 import testBg from "@/assets/background/test.jpg"
+import holywingsBg from "@/assets/background/test2.jpg"
 import {useGameData} from "@/lib/GameContext"
 import { isWithinInterval } from "date-fns"
 
@@ -43,10 +44,10 @@ export const Location: LocationType[] = [
   {
     name: "Kampus",
     bgImg: umnBg,
-    time: {
-      start: 8,
-      end: 18
-    },
+    // time: {
+    //   start: 7,
+    //   end: 18
+    // },
     actions: [
       {
         name: "Kuliah",
@@ -67,7 +68,7 @@ export const Location: LocationType[] = [
   },
   {
     name: "HolyWings",
-    bgImg: testBg,
+    bgImg: holywingsBg,
     actions: [
       {
         name: "Main",

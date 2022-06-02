@@ -1,3 +1,4 @@
+import { NewsType } from "./../lib/@types";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "@/lib/UserContext";
@@ -14,21 +15,11 @@ import {
   AvatarBody,
 } from "@/components";
 import axios from "axios";
-import React from "react";
 
-type NewsType = {
-  title: string;
-  description: string;
-  publishedAt: string; 
-  source: {
-    name: string;
-    id: string;
-  };
-};
-
-import { LocationType, Player, MatkulType } from "@/lib/@types";
+import { LocationType, MatkulType } from "@/lib/@types";
 import { Location as LocationData, isStillTime } from "@/data/Location";
-import { jurusan as JurusanData } from "@/data/Jurusan";
+import { AnimatePresence, LayoutGroup } from "framer-motion";
+import { useNews } from "@/lib/useNews";
 
 type ModalType = {
   news: boolean;
@@ -36,7 +27,6 @@ type ModalType = {
   matkul: boolean;
 };
 type LocationModalProps = {
-  mapOpen: boolean;
   setMapOpen: () => void;
   handleLocationChange: (idx: number) => void;
 };
@@ -50,12 +40,17 @@ export const GamePage = () => {
     location: false,
     matkul: false,
   });
+  const { news, fetchNews } = useNews();
 
   useEffect(() => {
     gameClock.start();
     return () => {
       gameClock.stop();
     };
+  }, []);
+
+  useEffect(() => {
+    fetchNews();
   }, []);
 
   function handleLocationChange(idx: number) {
@@ -73,48 +68,9 @@ export const GamePage = () => {
     setOpenModal({ ...openModal, [modal]: value });
   }
 
-  const [newsApi, setNewsApi] = useState<NewsType[]>([]);
-  const [data, setData] = useState<NewsType[]>([]);
-
-  let newsInterval: NodeJS.Timer;
-
-  async function fetchNews() {
-    const url =
-      "https://newsapi.org/v2/top-headlines?country=id&apiKey=2b36ad8a386149b9b1c95942d736a457";
-    try {
-      let res = await axios.get(url);
-      if (res.status === 200) {
-        setNewsApi(res.data.articles);
-      }
-      return res.data.articles;
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
-  const [index, setIndex] = useState(0);
-  const [start, setStart] = useState(false);
-  useEffect(() => {
-    fetchNews().then(() => {
-      setStart(true);
-    });
-  }, []);
-
-  useEffect(() => {
-    if (start && index < newsApi.length) {
-      newsInterval = setInterval(() => {
-        setData((prev) => [newsApi[index], ...prev]);
-        setIndex(index + 1);
-      }, 30000);
-    } else {
-      clearInterval(newsInterval);
-    }
-    return () => clearInterval(newsInterval);
-  }, [start, index]);
-
   return (
     <div
-      className={`h-screen relative bg-cover flex flex-col`}
+      className={`h-screen relative flex flex-col bg-cover overflow-x-none transition-all`}
       style={{
         backgroundImage: `url(${location.bgImg})`,
       }}
@@ -125,26 +81,37 @@ export const GamePage = () => {
         onClick={() => navigate("/")}
       />
 
-      <main className="p-6 grid grid-cols-1 lg:grid-cols-3 grow backdrop-blur-sm gap-3">
+      <main className="p-6 grid grid-cols-1 lg:grid-cols-3 grid-rows-1 grow backdrop-blur-sm gap-3 overflow-hidden">
         <Sidebar location={location} setOpenModal={handleClickModal} />
-
         {/* <h1>Game Page Aul suka titid gede</h1> */}
 
         <AvatarBody
           className="hidden lg:flex col-start-2 col-end-3"
           head={user.avatar}
         />
-        <LocationModal
-          mapOpen={openModal.location}
-          setMapOpen={() => setOpenModal({ ...openModal, location: false })}
-          handleLocationChange={handleLocationChange}
-        />
-        <NewsModal
-          newsData={data}
-          open={openModal.news}
-          setOpen={handleClickModal}
-        />
-        <MatkulModal open={openModal.matkul} setOpen={handleClickModal} />
+        <div className="col-start-3 col-end-4">
+          <AnimatePresence exitBeforeEnter>
+            {openModal.location && (
+              <LocationModal
+                key="Location"
+                setMapOpen={() =>
+                  setOpenModal({ ...openModal, location: false })
+                }
+                handleLocationChange={handleLocationChange}
+              />
+            )}
+            {openModal.news && (
+              <NewsModal
+                key="News"
+                newsData={news}
+                setOpen={handleClickModal}
+              />
+            )}
+            {openModal.matkul && (
+              <MatkulModal key="Matkul" setOpen={handleClickModal} />
+            )}
+          </AnimatePresence>
+        </div>
       </main>
     </div>
   );
@@ -180,7 +147,7 @@ function Sidebar({
       </div>
       <div id="Button" className="mt-auto">
         <ButtonGroup>
-          <ButtonGroup>
+          <AnimatePresence>
             {location.actions.map((loc, idx) => (
               <Button
                 key={idx}
@@ -210,7 +177,7 @@ function Sidebar({
                 News
               </Button>
             </div>
-          </ButtonGroup>
+          </AnimatePresence>
         </ButtonGroup>
       </div>
     </div>
@@ -218,7 +185,6 @@ function Sidebar({
 }
 
 function LocationModal({
-  mapOpen,
   setMapOpen,
   handleLocationChange,
 }: LocationModalProps) {
@@ -226,9 +192,7 @@ function LocationModal({
   return (
     <OverlayModal
       title="Choose Location"
-      isOpen={mapOpen}
       onClose={() => setMapOpen()}
-      className="col-start-3 col-end-4"
       disableFloat={true}
     >
       {LocationData.map((loc, idx) => {
@@ -249,51 +213,48 @@ function LocationModal({
 
 const NewsModal = ({
   newsData,
-  open,
   setOpen,
 }: {
   newsData: NewsType[];
-  open: boolean;
   setOpen: (modal: keyof ModalType, value: boolean) => void;
 }) => {
+  const { isAvailable } = useNews();
   return (
     <OverlayModal
       title="News"
       onClose={() => setOpen("news", false)}
-      isOpen={open}
-      className="col-start-3 col-end-4 overflow-y-auto overflow-x-hidde"
       disableFloat={true}
     >
-      {newsData.map((news, idx) => (
-        <div key={idx} className="flex flex-col">
-          <a
-            href="#"
-            className="block p-6 max-w-xl bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 dark:bg-gray-600 dark:border-gray-500 dark:hover:bg-gray-700"
-          >
-            <h6 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-              {news.title}
-            </h6>
-            <p className="font-normal text-gray-700 dark:text-gray-400 truncate">
-              {news.description}
-            </p>
-            <p className="text-slate-50 dark:text-slate-50 mt-2">
-              {format(parseISO(news.publishedAt), "dd MMMM yyyy")}
-            </p>
-            <p className="text-slate-50 dark:text-slate-50 mt-2">
-              {news.source.name}
-            </p>
-          </a>
-        </div>
-      ))}
+      <div className="overflow-hidden overflow-y-auto flex flex-col gap-5">
+        {newsData.map((news, idx) => (
+          <div key={idx} className="flex flex-col">
+            <a
+              href="#"
+              className="block p-6 max-w-xl bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 dark:bg-gray-600 dark:border-gray-500 dark:hover:bg-gray-700"
+            >
+              <h6 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                {news.title}
+              </h6>
+              <p className="font-normal text-gray-700 dark:text-gray-400 truncate">
+                {news.description}
+              </p>
+              <p className="text-slate-50 dark:text-slate-50 mt-2">
+                {format(parseISO(news.publishedAt), "dd MMMM yyyy")}
+              </p>
+              <p className="text-slate-50 dark:text-slate-50 mt-2">
+                {news.source.name}
+              </p>
+            </a>
+          </div>
+        ))}
+      </div>
     </OverlayModal>
   );
 };
 
 const MatkulModal = ({
-  open,
   setOpen,
 }: {
-  open: boolean;
   setOpen: (modal: keyof ModalType, value: boolean) => void;
 }) => {
   const { user } = useUser();
@@ -312,8 +273,6 @@ const MatkulModal = ({
     <OverlayModal
       title="Mata Kuliah"
       onClose={() => setOpen("matkul", false)}
-      isOpen={open}
-      className="col-start-3 col-end-4"
       disableFloat={true}
     >
       {user.major.matkul.map((matkul, idx) => (
