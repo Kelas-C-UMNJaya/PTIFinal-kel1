@@ -5,6 +5,7 @@ export type GameClockType = {
   callback: () => void;
   stop: () => void;
   change: (hour: number) => void;
+  changeVal: (date: Date) => void;
 };
 
 export type GameContextType = {
