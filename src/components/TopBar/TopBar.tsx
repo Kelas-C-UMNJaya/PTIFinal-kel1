@@ -23,11 +23,6 @@ const PauseButton = ({ onClick }: ButtonProps) => (
   </div>
 );
 
-//=========================================================
-
-//API current = https://api.openweathermap.org/data/2.5/weather?lat=-6&lon=106&appid=c4f20795b22d9933d772b5548880bcfd
-//temp, weather
-
 const WeatherBar = () => {
   const url = 'https://api.openweathermap.org/data/2.5/weather?lat=-6&lon=106&appid=c4f20795b22d9933d772b5548880bcfd&units=metric';
   const [weatherData, setWeather] = useState({
@@ -58,9 +53,6 @@ const WeatherBar = () => {
     </div>
   );
 };
-
-
-//=========================================================
 
 export const TopBar = ({ clock, date, onClick, ...props }: Props) => {
   return (
