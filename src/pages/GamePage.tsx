@@ -30,7 +30,7 @@ type NewsType = {
 import { LocationType, Player, MatkulType } from "@/lib/@types";
 import { Location as LocationData, isStillTime } from "@/data/Location";
 import { jurusan as JurusanData } from "@/data/Jurusan";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence, LayoutGroup } from "framer-motion";
 
 type ModalType = {
   news: boolean;
@@ -38,7 +38,6 @@ type ModalType = {
   matkul: boolean;
 };
 type LocationModalProps = {
-  mapOpen: boolean;
   setMapOpen: () => void;
   handleLocationChange: (idx: number) => void;
 };
@@ -130,26 +129,37 @@ export const GamePage = () => {
         onClick={() => navigate("/")}
       />
 
-      <main className="p-6 grid grid-cols-1 lg:grid-cols-3 grow backdrop-blur-sm gap-3 overflow-hidden">
+      <main className="p-6 grid grid-cols-1 lg:grid-cols-3 grid-rows-1 grow backdrop-blur-sm gap-3 overflow-hidden">
         <Sidebar location={location} setOpenModal={handleClickModal} />
-
         {/* <h1>Game Page Aul suka titid gede</h1> */}
 
         <AvatarBody
           className="hidden lg:flex col-start-2 col-end-3"
           head={user.avatar}
         />
-        <LocationModal
-          mapOpen={openModal.location}
-          setMapOpen={() => setOpenModal({ ...openModal, location: false })}
-          handleLocationChange={handleLocationChange}
-        />
-        <NewsModal
-          newsData={data}
-          open={openModal.news}
-          setOpen={handleClickModal}
-        />
-        <MatkulModal open={openModal.matkul} setOpen={handleClickModal} />
+        <div className="col-start-3 col-end-4 overflow-y-auto overflow-x-hidden">
+          <AnimatePresence exitBeforeEnter>
+            {openModal.location && (
+              <LocationModal
+                key="Location"
+                setMapOpen={() =>
+                  setOpenModal({ ...openModal, location: false })
+                }
+                handleLocationChange={handleLocationChange}
+              />
+            )}
+            {openModal.news && (
+              <NewsModal
+                key="News"
+                newsData={data}
+                setOpen={handleClickModal}
+              />
+            )}
+            {openModal.matkul && (
+              <MatkulModal key="Matkul" setOpen={handleClickModal} />
+            )}
+          </AnimatePresence>
+        </div>
       </main>
     </div>
   );
@@ -223,7 +233,6 @@ function Sidebar({
 }
 
 function LocationModal({
-  mapOpen,
   setMapOpen,
   handleLocationChange,
 }: LocationModalProps) {
@@ -231,9 +240,7 @@ function LocationModal({
   return (
     <OverlayModal
       title="Choose Location"
-      isOpen={mapOpen}
       onClose={() => setMapOpen()}
-      className="col-start-3 col-end-4"
       disableFloat={true}
     >
       {LocationData.map((loc, idx) => {
@@ -254,19 +261,15 @@ function LocationModal({
 
 const NewsModal = ({
   newsData,
-  open,
   setOpen,
 }: {
   newsData: NewsType[];
-  open: boolean;
   setOpen: (modal: keyof ModalType, value: boolean) => void;
 }) => {
   return (
     <OverlayModal
       title="News"
       onClose={() => setOpen("news", false)}
-      isOpen={open}
-      className="col-start-3 col-end-4 overflow-y-auto overflow-x-hidde"
       disableFloat={true}
     >
       {newsData.map((news, idx) => (
@@ -295,10 +298,8 @@ const NewsModal = ({
 };
 
 const MatkulModal = ({
-  open,
   setOpen,
 }: {
-  open: boolean;
   setOpen: (modal: keyof ModalType, value: boolean) => void;
 }) => {
   const { user } = useUser();
@@ -317,8 +318,6 @@ const MatkulModal = ({
     <OverlayModal
       title="Mata Kuliah"
       onClose={() => setOpen("matkul", false)}
-      isOpen={open}
-      className="col-start-3 col-end-4"
       disableFloat={true}
     >
       {user.major.matkul.map((matkul, idx) => (
