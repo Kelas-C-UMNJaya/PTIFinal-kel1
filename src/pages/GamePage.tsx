@@ -14,12 +14,12 @@ import {
   OverlayModal,
   AvatarBody,
 } from "@/components";
-import axios from "axios";
-
 import { LocationType, MatkulType } from "@/lib/@types";
 import { Location as LocationData, isStillTime } from "@/data/Location";
 import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
 import { useNews } from "@/lib/useNews";
+import { useWeather } from "@/lib/useWeather";
+import { useStorage } from "@/lib/useStorage";
 
 type ModalType = {
   news: boolean;
@@ -41,8 +41,13 @@ export const GamePage = () => {
     matkul: false,
   });
   const { news, fetchNews } = useNews();
+  const { weatherData, fetchWeather } = useWeather();
+  const { getFromLocalStorage, setToLocalStorage } = useStorage();
 
   useEffect(() => {
+    if (!getFromLocalStorage()) {
+      setToLocalStorage();
+    }
     gameClock.start();
     return () => {
       gameClock.stop();
@@ -51,8 +56,18 @@ export const GamePage = () => {
 
   useEffect(() => {
     fetchNews();
+    fetchWeather();
   }, []);
 
+  useEffect(() => {
+    window.addEventListener("beforeunload", () => {
+      setToLocalStorage();
+    });
+    return () => {
+      setToLocalStorage();
+      document.removeEventListener("beforeunload", setToLocalStorage);
+    };
+  }, [gameClock.time]);
   function handleLocationChange(idx: number) {
     if (isStillTime(gameClock.time.getHours(), LocationData[idx].time)) {
       setLocation(LocationData[idx]);
@@ -83,6 +98,7 @@ export const GamePage = () => {
           clock={format(gameClock.time, "HH:mm")}
           date={format(gameClock.time, "E, dd MMMM yyyy")}
           onClick={() => navigate("/")}
+          weatherData={weatherData}
         />
 
         <main className="p-6 grid grid-cols-1 lg:grid-cols-3 grid-rows-1 grow backdrop-blur-sm gap-3 overflow-hidden">

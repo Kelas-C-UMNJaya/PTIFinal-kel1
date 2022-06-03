@@ -1,7 +1,7 @@
 import { LocationType } from "@/lib/@types"
 import umnBg from "@/assets/background/umn-siang.jpg"
-import testBg from "@/assets/background/test.jpg"
-import holywingsBg from "@/assets/background/test2.jpg"
+import bedDayBg from "@/assets/background/bedroomDay.jpg"
+import pubDaybg from "@/assets/background/pubDay.jpg"
 import {useGameData} from "@/lib/GameContext"
 import { isWithinInterval } from "date-fns"
 
@@ -13,7 +13,7 @@ export const isStillTime = (clockNow: number, time: {start: number, end: number}
 export const Location: LocationType[] = [
   {
     name: "Rumah",
-    bgImg: testBg,
+    bgImg: bedDayBg,
     actions: [
       {
         name: "Tidur",
@@ -68,7 +68,7 @@ export const Location: LocationType[] = [
   },
   {
     name: "HolyWings",
-    bgImg: holywingsBg,
+    bgImg: pubDaybg,
     actions: [
       {
         name: "Main",
