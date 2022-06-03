@@ -37,9 +37,6 @@ const AboutButton = ({ onClick, ...props }: ButtonProps) => (
 export const LoginPage = () => {
   const { user, changeData } = useUser();
   const [move, setMove] = useState(0);
-  useEffect(() => {
-    window.localStorage.removeItem("data");
-  }, []);
   return (
     <div
       className="flex h-screen flex-col justify-center items-center backdrop-blur-sm bg-cover"
@@ -76,8 +73,8 @@ const InputBioPage = ({
   const { changeData } = useUser();
   const name = useRef<HTMLInputElement>(null);
   const jurusan = useRef<HTMLSelectElement>(null);
-  const { setToLocalStorage } = useStorage();
   const navigate = useNavigate();
+  const storage = useStorage();
   const handleSubmit = () => {
     if (
       !(
@@ -98,11 +95,12 @@ const InputBioPage = ({
   };
   return (
     <motion.div
-        initial={{ scale: 0 }}
-        animate={{ scale: 1 }}
-        exit={{scale: 0}}
-        transition={{delay: 0.1, type: "easeInOut", duration: 0.1}}
-        className="flex flex-col md:flex-row justify-center items-center bg-slate-700 p-6 md:p-12 rounded-lg gap-5">
+      initial={{ scale: 0 }}
+      animate={{ scale: 1 }}
+      exit={{ scale: 0 }}
+      transition={{ delay: 0.1, type: "easeInOut", duration: 0.1 }}
+      className="flex flex-col md:flex-row justify-center items-center bg-slate-700 p-6 md:p-12 rounded-lg gap-5"
+    >
       <div className="max-h-[300px] max-w-[300px]">
         <img src={avatarImg} className="object-contain w-full h-full" />
       </div>

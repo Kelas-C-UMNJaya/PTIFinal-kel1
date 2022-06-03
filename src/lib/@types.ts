@@ -4,6 +4,7 @@ export type GameClockType = {
   start: () => NodeJS.Timer;
   callback: () => void;
   stop: () => void;
+  reset: () => void;
   change: (hour: number) => void;
   changeVal: (date: Date) => void;
 };
@@ -65,6 +66,7 @@ export interface PlayerContext {
     major?: JurusanType;
     avatar?: string;
   }) => void;
+  resetUser: () => void;
 }
 
 export interface LocationActionType {
@@ -104,6 +106,9 @@ export type ReducerReturn =
     }
   | {
       type: "resetRate";
+    }
+  | {
+      type: "resetVal";
     }
   | {
       type: "setActive";

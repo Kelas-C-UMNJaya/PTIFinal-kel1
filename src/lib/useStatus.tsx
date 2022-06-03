@@ -10,6 +10,10 @@ export const useStatus = (input: PlayerStatus): StatusReturn => {
     };
   };
 
+  const initVal = () => {
+    return input.val;
+  };
+
   const reducer = (
     state: PlayerStatus,
     action: ReducerReturn
@@ -50,6 +54,13 @@ export const useStatus = (input: PlayerStatus): StatusReturn => {
           ...state,
           rate: initRate(),
         };
+
+      case "resetVal":
+        return {
+          ...state,
+          val: initVal(),
+        };
+
       default:
         throw new Error();
     }

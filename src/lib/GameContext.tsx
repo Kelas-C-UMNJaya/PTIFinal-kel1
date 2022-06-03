@@ -25,7 +25,7 @@ const gameClock = () => {
   const [time, setTime] = useState(startOfWeek(startOfToday()));
   let interval: NodeJS.Timer;
   const updateTime = () => {
-    setTime((prevTime) => addMinutes(prevTime, 1));
+    setTime((prevTime) => addMinutes(prevTime, 5));
   };
 
   let clockRun: boolean = false;
@@ -38,6 +38,11 @@ const gameClock = () => {
   const startClock = () => {
     interval = setInterval(callback, 1000);
     return interval;
+  };
+
+  const resetClock = () => {
+    clearInterval(interval);
+    setTime(startOfWeek(startOfToday()));
   };
 
   const changeVal = (date: Date) => {
@@ -58,6 +63,7 @@ const gameClock = () => {
     start: startClock,
     stop: stopClock,
     change: changeClock,
+    reset: resetClock,
     changeVal,
     callback,
   };

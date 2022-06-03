@@ -48,7 +48,7 @@ export const useStorage = () => {
     received: newsReceived,
   } = useNews();
 
-  const getFromLocalStorage = (): boolean => {
+  const getUser = (): boolean => {
     if (localStorage === null) return false;
     console.log(localStorage.gameData.gameClock);
     changeData(localStorage.user);
@@ -67,7 +67,7 @@ export const useStorage = () => {
     return true;
   };
 
-  const setToLocalStorage = () => {
+  const saveUser = () => {
     const data: LocalStorageType = {
       user: user,
       gameData: {
@@ -78,5 +78,6 @@ export const useStorage = () => {
     setLocalStorage(data);
     window.localStorage.setItem("data", JSON.stringify(data));
   };
-  return { localStorage, getFromLocalStorage, setToLocalStorage };
+
+  return { localStorage, getUser, saveUser };
 };

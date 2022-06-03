@@ -16,8 +16,9 @@ export const ModalWithButtons: ComponentStory<typeof OverlayModal> = () => {
     console.log("Button is clicked!");
     console.log(isOpen);
   };
+  if (!isOpen) return <></>;
   return (
-    <OverlayModal isOpen={isOpen} onClose={() => setIsOpen(false)}>
+    <OverlayModal title="Test Button" onClose={() => setIsOpen(false)}>
       <Button onClick={handleClick}>Button 1</Button>
       <Button onClick={handleClick}>Button 2</Button>
       <Button onClick={handleClick}>Button 3</Button>

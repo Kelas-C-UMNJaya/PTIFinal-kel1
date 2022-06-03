@@ -25,6 +25,7 @@ type ModalType = {
   news: boolean;
   location: boolean;
   matkul: boolean;
+  debug: boolean;
 };
 type LocationModalProps = {
   setMapOpen: () => void;
@@ -39,17 +40,24 @@ export const GamePage = () => {
     news: false,
     location: false,
     matkul: false,
+    debug: false,
   });
   const { news, fetchNews } = useNews();
   const { weatherData, fetchWeather } = useWeather();
-  const { getFromLocalStorage, setToLocalStorage } = useStorage();
+  const storage = useStorage();
+
+  function handleKeyDebug(e: KeyboardEvent) {
+    if ((e.metaKey || e.ctrlKey) && e.code === "F6") {
+      handleClickModal("debug", true);
+    }
+  }
 
   useEffect(() => {
-    if (!getFromLocalStorage()) {
-      setToLocalStorage();
-    }
+    storage.getUser();
+    document.addEventListener("keydown", handleKeyDebug);
     gameClock.start();
     return () => {
+      document.removeEventListener("keydown", handleKeyDebug);
       gameClock.stop();
     };
   }, []);
@@ -60,14 +68,20 @@ export const GamePage = () => {
   }, []);
 
   useEffect(() => {
-    window.addEventListener("beforeunload", () => {
-      setToLocalStorage();
-    });
-    return () => {
-      setToLocalStorage();
-      document.removeEventListener("beforeunload", setToLocalStorage);
-    };
-  }, [gameClock.time]);
+    if (user.name !== "") {
+      storage.saveUser();
+    }
+  }, [user, location]);
+
+  // useEffect(() => {
+  //   window.addEventListener("beforeunload", () => {
+  //     setToLocalStorage();
+  //   });
+  //   return () => {
+  //     setToLocalStorage();
+  //     document.removeEventListener("beforeunload", setToLocalStorage);
+  //   };
+  // }, [gameClock.time]);
   function handleLocationChange(idx: number) {
     if (isStillTime(gameClock.time.getHours(), LocationData[idx].time)) {
       setLocation(LocationData[idx]);
@@ -129,6 +143,10 @@ export const GamePage = () => {
               )}
               {openModal.matkul && (
                 <MatkulModal key="Matkul" setOpen={handleClickModal} />
+              )}
+
+              {openModal.debug && (
+                <DebugModal key="Debug" setOpen={handleClickModal} />
               )}
             </AnimatePresence>
           </div>
@@ -301,6 +319,48 @@ const MatkulModal = ({
           {matkul.name}
         </Button>
       ))}
+    </OverlayModal>
+  );
+};
+
+const DebugModal = ({
+  setOpen,
+}: {
+  setOpen: (modal: keyof ModalType, value: boolean) => void;
+}) => {
+  const { gameClock } = useGameData();
+  const { user, resetUser } = useUser();
+  const { isAvailable } = useNews();
+
+  const handleReset = () => {
+    gameClock.reset();
+    resetUser();
+  };
+
+  return (
+    <OverlayModal
+      title="Debug"
+      onClose={() => setOpen("debug", false)}
+      disableFloat={true}
+    >
+      <Button onClick={handleReset}>Reset Clock</Button>
+      <div className="flex justify-between">
+        <Button
+          onClick={() => {
+            gameClock.change(1);
+          }}
+        >
+          +1 clock
+        </Button>
+
+        <Button
+          onClick={() => {
+            gameClock.change(-1);
+          }}
+        >
+          -1 clock
+        </Button>
+      </div>
     </OverlayModal>
   );
 };

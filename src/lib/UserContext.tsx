@@ -73,6 +73,15 @@ export const UserProvider = ({ children }: ProviderProps) => {
     }
   };
 
+  const resetUser = () => {
+    let status: keyof Player["status"];
+    for (status in user.status) {
+      user.status[status].dispatch({ type: "resetVal" });
+      user.status[status].dispatch({ type: "resetRate" });
+      user.status[status].dispatch({ type: "setActive", payload: false });
+    }
+  };
+
   const changeData = ({
     name,
     major,
@@ -91,7 +100,7 @@ export const UserProvider = ({ children }: ProviderProps) => {
 
   return (
     <UserContext.Provider
-      value={{ user, updateStatus, toggleStatus, changeData }}
+      value={{ user, updateStatus, toggleStatus, changeData, resetUser }}
     >
       {children}
     </UserContext.Provider>
