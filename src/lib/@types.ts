@@ -105,6 +105,10 @@ export type ReducerReturn =
       payload: number;
     }
   | {
+      type: "changeVal";
+      payload: number;
+    }
+  | {
       type: "resetRate";
     }
   | {

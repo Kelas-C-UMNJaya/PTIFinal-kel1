@@ -3,7 +3,7 @@ import umnBg from "@/assets/background/umn-pagi.png";
 import logo from "@/assets/logo.png";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import {useState} from "react";
+import { useState } from "react";
 import { AnimatePresence } from "framer-motion";
 
 export const Home = () => {
@@ -32,18 +32,21 @@ export const Home = () => {
         <Button onClick={() => setShowAbout(true)}>About</Button>
       </ButtonGroup>
       <AnimatePresence>
-      {showAbout && <AboutModal key="about-us" setClose={() => setShowAbout(false)} />}
+        {showAbout && (
+          <AboutModal key="about-us" setClose={() => setShowAbout(false)} />
+        )}
       </AnimatePresence>
     </motion.div>
   );
 };
 
-const AboutModal = ({setClose}: {setClose: () => void}) => {
+const AboutModal = ({ setClose }: { setClose: () => void }) => {
   return (
     <OverlayModal title="About" onClose={setClose} className="m-5" manualHeight>
       <h1>Aul suka titid gede {">"}15cm</h1>
       <h3 className="text-2xl"> Credits </h3>
-      <ol className="list-decimal">
+      <hr />
+      <ol className="list-decimal pl-4">
         <li>
           <b>Rivo Juicer Wowor (00000059635)</b>
           <br />
@@ -66,5 +69,5 @@ const AboutModal = ({setClose}: {setClose: () => void}) => {
         </li>
       </ol>
     </OverlayModal>
-  )
-}
+  );
+};

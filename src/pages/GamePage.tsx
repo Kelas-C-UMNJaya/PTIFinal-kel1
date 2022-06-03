@@ -30,7 +30,7 @@ type LocationModalProps = {
 export const GamePage = () => {
   const navigate = useNavigate();
   const { location, setLocation, gameClock } = useGameData();
-  const { user } = useUser();
+  const { user, toggleStatus } = useUser();
   const [openModal, setOpenModal] = useState<ModalType>({
     news: false,
     location: false,
@@ -100,6 +100,7 @@ export const GamePage = () => {
   // }, [gameClock.time]);
   function handleLocationChange(idx: number) {
     if (isStillTime(gameClock.time.getHours(), LocationData[idx].time)) {
+      toggleStatus();
       setLocation(LocationData[idx]);
       setOpenModal({ ...openModal, location: false });
     }
@@ -315,13 +316,21 @@ const MatkulModal = ({
   setOpen: (modal: keyof ModalType, value: boolean) => void;
 }) => {
   const { user } = useUser();
-  const { gameClock } = useGameData();
+  const { gameClock, setLocation } = useGameData();
 
   const handleMatkulChange = (matkul: MatkulType) => {
     user.status.belajar.dispatch({
       type: "setVal",
       payload: matkul.val,
     });
+    if (
+      !isStillTime(
+        gameClock.time.getHours() + matkul.duration,
+        LocationData[1].time
+      )
+    ) {
+      setLocation(LocationData[0]);
+    }
     gameClock.change(matkul.duration);
     setOpen("matkul", false);
   };

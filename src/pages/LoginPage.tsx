@@ -62,7 +62,7 @@ const InputBioPage = ({
   avatarImg: string;
   onBack: () => void;
 }) => {
-  const { changeData } = useUser();
+  const { changeData, resetUser } = useUser();
   const name = useRef<HTMLInputElement>(null);
   const jurusan = useRef<HTMLSelectElement>(null);
   const navigate = useNavigate();
@@ -85,6 +85,7 @@ const InputBioPage = ({
       major: JurusanData.find((val) => val.name === jurusan.current?.value),
     });
     gameClock.reset();
+    resetUser();
     storage.reset();
     setLocation(LocationData[0]);
     navigate("/game");

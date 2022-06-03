@@ -34,6 +34,11 @@ export const useStatus = (input: PlayerStatus): StatusReturn => {
       case "setVal":
         return {
           ...state,
+          val: state.val + action.payload,
+        };
+      case "changeVal":
+        return {
+          ...state,
           val: action.payload,
         };
 
