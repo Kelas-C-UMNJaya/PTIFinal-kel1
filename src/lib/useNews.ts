@@ -23,7 +23,6 @@ export const useNews = () => {
       if (res.status === 200) {
         setNewsApi(res.data.articles);
         setReceived(new Date());
-        return 1;
       }
       setStart(true);
     } catch (err) {

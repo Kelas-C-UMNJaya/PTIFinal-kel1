@@ -13,7 +13,7 @@ import {
   ButtonGroup,
   OverlayModal,
   AvatarBody,
-  PauseMenu
+  PauseMenu,
 } from "@/components";
 import { LocationType, MatkulType } from "@/lib/@types";
 import { Location as LocationData, isStillTime } from "@/data/Location";
@@ -43,6 +43,7 @@ export const GamePage = () => {
   const { weatherData, fetchWeather } = useWeather();
   const [today, setToday] = useState<Date>(gameClock.time);
   const storage = useStorage();
+  const { updateTotal } = useUser();
 
   function handleKeyDebug(e: KeyboardEvent) {
     if ((e.metaKey || e.ctrlKey) && e.code === "F6") {
@@ -56,12 +57,12 @@ export const GamePage = () => {
     return () => {
       document.removeEventListener("keydown", handleKeyDebug);
     };
-  }, [pause]);
-  
+  }, []);
+
   useEffect(() => {
     pause ? gameClock.stop() : gameClock.start();
     return () => gameClock.stop();
-  }, [pause])
+  }, [pause]);
 
   useEffect(() => {
     if (gameClock.isFinish) {
@@ -78,8 +79,13 @@ export const GamePage = () => {
   }, []);
 
   useEffect(() => {
-    if (user.name !== "" && isSameDay(today, gameClock.time)) {
-      storage.saveUser();
+    if (!isSameDay(gameClock.time, today)) {
+      if (user.name !== "") {
+        storage.saveUser();
+      }
+      updateTotal();
+      fetchWeather();
+      setToday(gameClock.time);
     }
   }, [user, location]);
 
@@ -157,11 +163,8 @@ export const GamePage = () => {
             {openModal.debug && (
               <DebugModal key="Debug" setOpen={handleClickModal} />
             )}
-            
-            {pause && (
-              <PauseMenu key="Pause" setOpen={() => setPause(false)} />
-            )}
 
+            {pause && <PauseMenu key="Pause" setOpen={() => setPause(false)} />}
           </AnimatePresence>
         </div>
       </main>
@@ -359,6 +362,11 @@ const DebugModal = ({
       disableFloat={true}
     >
       <p>Is done?: {gameClock.isFinish ? "yes" : "no"}</p>
+      <p>belajar: {user.status.belajar.state.total}</p>
+      <p>tidur: {user.status.tidur.state.total}</p>
+      <p>makan: {user.status.makan.state.total}</p>
+      <p>main: {user.status.main.state.total}</p>
+
       <Button onClick={handleReset}>Reset Clock</Button>
       <div className="flex justify-between">
         <Button

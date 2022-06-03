@@ -19,6 +19,7 @@ import { useUser } from "@/lib/UserContext";
 import { jurusan as JurusanData } from "@/data/Jurusan";
 import { useStorage } from "@/lib/useStorage";
 import { useGameData } from "@/lib/GameContext";
+import { Location as LocationData } from "@/data/Location";
 
 import umnBg from "@/assets/background/umn-pagi.png";
 
@@ -65,7 +66,7 @@ const InputBioPage = ({
   const name = useRef<HTMLInputElement>(null);
   const jurusan = useRef<HTMLSelectElement>(null);
   const navigate = useNavigate();
-  const { gameClock } = useGameData();
+  const { gameClock, setLocation } = useGameData();
   const storage = useStorage();
   const handleSubmit = () => {
     if (
@@ -85,6 +86,7 @@ const InputBioPage = ({
     });
     gameClock.reset();
     storage.reset();
+    setLocation(LocationData[0]);
     navigate("/game");
   };
   return (

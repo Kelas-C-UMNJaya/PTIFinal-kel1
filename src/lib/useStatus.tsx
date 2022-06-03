@@ -48,12 +48,12 @@ export const useStatus = (input: PlayerStatus): StatusReturn => {
           ...state,
           isActive: action.payload,
         };
-      
+
       case "addTotal":
         return {
           ...state,
           total: state.total + action.payload,
-        }
+        };
 
       case "resetRate":
         return {
@@ -65,6 +65,7 @@ export const useStatus = (input: PlayerStatus): StatusReturn => {
         return {
           ...state,
           val: initVal(),
+          total: 0,
         };
 
       default:

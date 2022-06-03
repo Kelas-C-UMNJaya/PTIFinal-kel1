@@ -69,6 +69,7 @@ export interface PlayerContext {
     avatar?: string;
   }) => void;
   resetUser: () => void;
+  updateTotal: () => void;
 }
 
 export interface LocationActionType {
@@ -119,7 +120,7 @@ export type ReducerReturn =
   | {
       type: "addTotal";
       payload: number;
-  }
+    };
 
 export interface MatkulType {
   name: string;
