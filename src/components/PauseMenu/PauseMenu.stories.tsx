@@ -8,5 +8,5 @@ export default {
 } as ComponentMeta<typeof PauseMenu>;
 
 export const Default: ComponentStory<typeof PauseMenu> = () => {
-  return <PauseMenu />;
+  return <PauseMenu setOpen={() => console.log("test")} />;
 };

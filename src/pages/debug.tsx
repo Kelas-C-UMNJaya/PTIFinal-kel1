@@ -117,7 +117,7 @@ export const DebugPage = () => {
 
       <div className="text-center">
         <img
-          src={Location[locationIdx].bgImg}
+          src={Location[locationIdx].bgImg.day}
           alt="location"
           className="object-cover h-48"
         />
