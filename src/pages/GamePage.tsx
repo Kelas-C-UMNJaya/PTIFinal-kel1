@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "@/lib/UserContext";
 import { useGameData } from "@/lib/GameContext";
-import { addDays, format, parseISO, isSameDay } from "date-fns";
+import { addDays, format, parseISO, isSameDay, getHours } from "date-fns";
 import {
   TopBar,
   GreetingsBar,
@@ -21,6 +21,7 @@ import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
 import { useNews } from "@/lib/useNews";
 import { useWeather } from "@/lib/useWeather";
 import { useStorage } from "@/lib/useStorage";
+import { rainBg } from "@/assets/background";
 
 type LocationModalProps = {
   setMapOpen: () => void;
@@ -30,13 +31,15 @@ type LocationModalProps = {
 export const GamePage = () => {
   const navigate = useNavigate();
   const { location, setLocation, gameClock } = useGameData();
-  const { user } = useUser();
+  const { user, toggleStatus } = useUser();
   const [openModal, setOpenModal] = useState<ModalType>({
     news: false,
     location: false,
     matkul: false,
     debug: false,
   });
+  const [bgImg, setBgImg] = useState<string>();
+  const [bgRain, setBgRain] = useState<boolean>(false);
 
   const [pause, setPause] = useState(false);
   const { news, fetchNews } = useNews();
@@ -89,6 +92,24 @@ export const GamePage = () => {
     }
   }, [user, location]);
 
+  useEffect(() => {
+    let hour = getHours(gameClock.time);
+    if (hour > 6 && hour < 18) {
+      setBgImg(location.bgImg.day);
+    } else {
+      setBgImg(location.bgImg.night);
+    }
+    if (
+      typeof weatherData !== "undefined" &&
+      weatherData?.weather?.id <= 700 &&
+      weatherData?.weather?.id > 800
+    ) {
+      setBgRain(false);
+    } else {
+      setBgRain(true);
+    }
+  }, [gameClock.time, location]);
+
   // useEffect(() => {
   //   window.addEventListener("beforeunload", () => {
   //     setToLocalStorage();
@@ -100,6 +121,7 @@ export const GamePage = () => {
   // }, [gameClock.time]);
   function handleLocationChange(idx: number) {
     if (isStillTime(gameClock.time.getHours(), LocationData[idx].time)) {
+      toggleStatus();
       setLocation(LocationData[idx]);
       setOpenModal({ ...openModal, location: false });
     }
@@ -119,10 +141,21 @@ export const GamePage = () => {
       animate={{ x: 0, opacity: 1 }}
       exit={{ x: 0, opacity: 0 }}
       className={`h-screen relative flex flex-col bg-cover overflow-x-none transition-all`}
-      style={{
-        backgroundImage: `url(${location.bgImg})`,
-      }}
     >
+      {bgRain && (
+        <div
+          className="-z-10 absolute inset-0"
+          style={{
+            backgroundImage: `url(${rainBg})`,
+          }}
+        />
+      )}
+      <div
+        className="-z-20 absolute inset-0"
+        style={{
+          backgroundImage: `url(${bgImg})`,
+        }}
+      />
       <TopBar
         clock={format(gameClock.time, "HH:mm")}
         date={format(gameClock.time, "E, dd MMMM yyyy")}
@@ -132,7 +165,6 @@ export const GamePage = () => {
 
       <main className="p-6 grid grid-cols-1 lg:grid-cols-3 grid-rows-1 grow backdrop-blur-sm gap-3 overflow-hidden">
         <Sidebar location={location} setOpenModal={handleClickModal} />
-        {/* <h1>Game Page Aul suka titid gede</h1> */}
 
         <AvatarBody
           className="hidden lg:flex col-start-2 col-end-3"
@@ -315,13 +347,21 @@ const MatkulModal = ({
   setOpen: (modal: keyof ModalType, value: boolean) => void;
 }) => {
   const { user } = useUser();
-  const { gameClock } = useGameData();
+  const { gameClock, setLocation } = useGameData();
 
   const handleMatkulChange = (matkul: MatkulType) => {
     user.status.belajar.dispatch({
       type: "setVal",
       payload: matkul.val,
     });
+    if (
+      !isStillTime(
+        gameClock.time.getHours() + matkul.duration,
+        LocationData[1].time
+      )
+    ) {
+      setLocation(LocationData[0]);
+    }
     gameClock.change(matkul.duration);
     setOpen("matkul", false);
   };

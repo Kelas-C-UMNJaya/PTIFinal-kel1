@@ -33,20 +33,6 @@ export const useStorage = () => {
     });
   const { user, changeData } = useUser();
   const { location, setLocation, gameClock } = useGameData();
-  const {
-    weatherData,
-    setWeather,
-    fetchWeather,
-    received: weatherReceived,
-  } = useWeather();
-  const {
-    news,
-    fetchNews,
-    isAvailable,
-    setIsAvailable,
-    setNewsApi,
-    received: newsReceived,
-  } = useNews();
 
   const getUser = (): boolean => {
     if (localStorage === null) return false;
@@ -55,7 +41,7 @@ export const useStorage = () => {
     let val: keyof Player["status"];
     for (val in localStorage.user.status) {
       user.status[val].dispatch({
-        type: "setVal",
+        type: "changeVal",
         payload: localStorage.user.status[val].state.val,
       });
       user.status[val].dispatch({
@@ -66,7 +52,6 @@ export const useStorage = () => {
     setLocation(localStorage.gameData.location);
     // setWeather(localStorage.weather.data);
     // setNewsApi(localStorage.news.data);
-    setIsAvailable(true);
     gameClock.changeVal(new Date(localStorage.gameData.gameClock));
     return true;
   };

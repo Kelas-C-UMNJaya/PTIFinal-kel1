@@ -1,5 +1,5 @@
 import { Button, ButtonGroup, OverlayModal } from "@/components";
-import umnBg from "@/assets/background/umn-pagi.png";
+import umnBg from "@/assets/background/umn-pagi.jpg";
 import logo from "@/assets/logo.png";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -16,7 +16,7 @@ export const Home = () => {
       initial={{ x: 0, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       exit={{ x: 0, opacity: 0 }}
-      className="relative flex flex-col justify-center items-center h-screen overflow-hidden"
+      className="relative flex flex-col justify-center items-center h-screen overflow-hidden bg-cover"
       style={{
         backgroundImage: `url(${umnBg})`,
       }}

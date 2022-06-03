@@ -1,19 +1,20 @@
-import { LocationType } from "@/lib/@types"
-import umnBg from "@/assets/background/umn-siang.jpg"
-import bedDayBg from "@/assets/background/bedroomDay.jpg"
-import pubDaybg from "@/assets/background/pubDay.jpg"
-import {useGameData} from "@/lib/GameContext"
-import { isWithinInterval } from "date-fns"
+import { LocationType } from "@/lib/@types";
+import { Background } from "@/assets/background";
+import { useGameData } from "@/lib/GameContext";
+import { isWithinInterval } from "date-fns";
 
-export const isStillTime = (clockNow: number, time: {start: number, end: number} | undefined) => {
-  if (time === undefined) return true
-  return isWithinInterval(clockNow, {start: time.start, end: time.end});
-}
+export const isStillTime = (
+  clockNow: number,
+  time: { start: number; end: number } | undefined
+) => {
+  if (time === undefined) return true;
+  return isWithinInterval(clockNow, { start: time.start, end: time.end });
+};
 
 export const Location: LocationType[] = [
   {
     name: "Rumah",
-    bgImg: bedDayBg,
+    bgImg: Background.rumah,
     actions: [
       {
         name: "Tidur",
@@ -21,7 +22,7 @@ export const Location: LocationType[] = [
           name: "tidur",
           growth: 0.2,
           shrink: 0.1,
-        }
+        },
       },
       {
         name: "Main",
@@ -29,7 +30,7 @@ export const Location: LocationType[] = [
           name: "main",
           growth: 0.6,
           shrink: 0.1,
-        }
+        },
       },
       {
         name: "Makan",
@@ -37,53 +38,53 @@ export const Location: LocationType[] = [
           name: "makan",
           growth: 10,
           shrink: 0.4,
-        }
-      }
-    ]
+        },
+      },
+    ],
   },
   {
     name: "Kampus",
-    bgImg: umnBg,
-    // time: {
-    //   start: 7,
-    //   end: 18
-    // },
+    bgImg: Background.kampus,
+    time: {
+      start: 7,
+      end: 18,
+    },
     actions: [
       {
         name: "Kuliah",
         status: {
           name: "belajar",
           growth: 0.4,
-          modal: "matkul"
-        }
+          modal: "matkul",
+        },
       },
       {
         name: "Makan",
         status: {
           name: "makan",
           growth: 2,
-        }
+        },
       },
-    ]
+    ],
   },
   {
     name: "HolyWings",
-    bgImg: pubDaybg,
+    bgImg: Background.pub,
     actions: [
       {
         name: "Main",
         status: {
           name: "main",
           growth: 1,
-        }
+        },
       },
       {
         name: "Makan",
         status: {
           name: "makan",
           growth: 4,
-        }
-      }
-    ]
+        },
+      },
+    ],
   },
-]
+];

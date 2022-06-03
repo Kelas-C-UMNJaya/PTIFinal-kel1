@@ -21,7 +21,7 @@ import { useStorage } from "@/lib/useStorage";
 import { useGameData } from "@/lib/GameContext";
 import { Location as LocationData } from "@/data/Location";
 
-import umnBg from "@/assets/background/umn-pagi.png";
+import umnBg from "@/assets/background/umn-pagi.jpg";
 
 interface ButtonProps extends ComponentProps {
   onClick: () => void;
@@ -62,7 +62,7 @@ const InputBioPage = ({
   avatarImg: string;
   onBack: () => void;
 }) => {
-  const { changeData } = useUser();
+  const { changeData, resetUser } = useUser();
   const name = useRef<HTMLInputElement>(null);
   const jurusan = useRef<HTMLSelectElement>(null);
   const navigate = useNavigate();
@@ -85,6 +85,7 @@ const InputBioPage = ({
       major: JurusanData.find((val) => val.name === jurusan.current?.value),
     });
     gameClock.reset();
+    resetUser();
     storage.reset();
     setLocation(LocationData[0]);
     navigate("/game");
