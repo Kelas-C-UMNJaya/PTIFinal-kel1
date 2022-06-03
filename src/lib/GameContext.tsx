@@ -1,5 +1,12 @@
-import { addHours, addMinutes, startOfToday, startOfWeek } from "date-fns";
-import { useState, createContext, useContext } from "react";
+import {
+  addHours,
+  addMinutes,
+  startOfToday,
+  startOfWeek,
+  addWeeks,
+  isWithinInterval,
+} from "date-fns";
+import { useState, createContext, useContext, useEffect } from "react";
 import {
   GameContextType,
   ProviderProps,
@@ -21,8 +28,12 @@ export const useGameData = () => {
 };
 
 const gameClock = () => {
+  const startTime = startOfWeek(startOfToday());
+  const endTime = addWeeks(startTime, 1);
+
   const { updateStatus } = useUser();
-  const [time, setTime] = useState(startOfWeek(startOfToday()));
+  const [time, setTime] = useState(startTime);
+  const [finish, setFinish] = useState(false);
   let interval: NodeJS.Timer;
   const updateTime = () => {
     setTime((prevTime) => addMinutes(prevTime, 5));
@@ -57,6 +68,10 @@ const gameClock = () => {
     clearInterval(interval);
   };
 
+  useEffect(() => {
+    setFinish(!isWithinInterval(time, { start: startTime, end: endTime }));
+  }, [time]);
+
   const returnType: GameClockType = {
     time,
     isActive: clockRun,
@@ -64,6 +79,7 @@ const gameClock = () => {
     stop: stopClock,
     change: changeClock,
     reset: resetClock,
+    isFinish: finish,
     changeVal,
     callback,
   };

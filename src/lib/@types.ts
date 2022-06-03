@@ -5,6 +5,7 @@ export type GameClockType = {
   callback: () => void;
   stop: () => void;
   reset: () => void;
+  isFinish: boolean;
   change: (hour: number) => void;
   changeVal: (date: Date) => void;
 };

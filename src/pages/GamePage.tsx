@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "@/lib/UserContext";
 import { useGameData } from "@/lib/GameContext";
-import { format, parseISO } from "date-fns";
+import { addDays, format, parseISO } from "date-fns";
 import {
   TopBar,
   GreetingsBar,
@@ -61,6 +61,13 @@ export const GamePage = () => {
       gameClock.stop();
     };
   }, []);
+
+  useEffect(() => {
+    if (gameClock.isFinish) {
+      gameClock.stop();
+      navigate("/finish");
+    }
+  }, [gameClock.isFinish]);
 
   useEffect(() => {
     fetchNews();
@@ -187,7 +194,7 @@ function Sidebar({
         </ProgressGroup>
       </div>
       <div id="Button" className="mt-auto">
-        <ButtonGroup>
+        <ButtonGroup className="overflow-y-auto">
           <AnimatePresence>
             {location.actions.map((loc, idx) => (
               <Button
@@ -345,22 +352,40 @@ const DebugModal = ({
       onClose={() => setOpen("debug", false)}
       disableFloat={true}
     >
+      <p>Is done?: {gameClock.isFinish ? "yes" : "no"}</p>
       <Button onClick={handleReset}>Reset Clock</Button>
       <div className="flex justify-between">
-        <Button
-          onClick={() => {
-            gameClock.change(1);
-          }}
-        >
-          +1 clock
-        </Button>
-
         <Button
           onClick={() => {
             gameClock.change(-1);
           }}
         >
-          -1 clock
+          -1 hour
+        </Button>
+
+        <Button
+          onClick={() => {
+            gameClock.change(1);
+          }}
+        >
+          +1 hour
+        </Button>
+      </div>
+      <div className="flex justify-between">
+        <Button
+          onClick={() => {
+            gameClock.changeVal(addDays(gameClock.time, -1));
+          }}
+        >
+          -1 day
+        </Button>
+
+        <Button
+          onClick={() => {
+            gameClock.changeVal(addDays(gameClock.time, 1));
+          }}
+        >
+          +1 day
         </Button>
       </div>
     </OverlayModal>
