@@ -2,10 +2,14 @@ import { Button, ButtonGroup } from "@/components";
 import umnBg from "@/assets/background/umn-pagi.png";
 import logo from "@/assets/logo.png";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 
 export const Home = () => {
   return (
-    <div
+    <motion.div
+      initial={{ x: 0, opacity: 0 }}
+      animate={{ x: 0, opacity: 1 }}
+      exit={{ x: 0, opacity: 0 }}
       className="flex flex-col justify-center items-center h-screen"
       style={{
         backgroundImage: `url(${umnBg})`,
@@ -22,6 +26,6 @@ export const Home = () => {
           <Button>Resume</Button>
         </Link>
       </ButtonGroup>
-    </div>
+    </motion.div>
   );
 };

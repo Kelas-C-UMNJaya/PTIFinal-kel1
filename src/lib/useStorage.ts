@@ -79,5 +79,10 @@ export const useStorage = () => {
     window.localStorage.setItem("data", JSON.stringify(data));
   };
 
-  return { localStorage, getUser, saveUser };
+  const reset = () => {
+    setLocalStorage(null);
+    window.localStorage.removeItem("data");
+  };
+
+  return { localStorage, getUser, saveUser, reset };
 };

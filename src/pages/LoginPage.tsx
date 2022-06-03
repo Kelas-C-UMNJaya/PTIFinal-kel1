@@ -18,6 +18,7 @@ import { ComponentProps } from "@/lib/@types";
 import { useUser } from "@/lib/UserContext";
 import { jurusan as JurusanData } from "@/data/Jurusan";
 import { useStorage } from "@/lib/useStorage";
+import { useGameData } from "@/lib/GameContext";
 
 import umnBg from "@/assets/background/umn-pagi.png";
 
@@ -38,7 +39,10 @@ export const LoginPage = () => {
   const { user, changeData } = useUser();
   const [move, setMove] = useState(0);
   return (
-    <div
+    <motion.div
+      initial={{ x: 0, opacity: 0 }}
+      animate={{ x: 0, opacity: 1 }}
+      exit={{ x: 0, opacity: 0 }}
       className="flex h-screen flex-col justify-center items-center backdrop-blur-sm bg-cover"
       style={{ backgroundImage: `url(${umnBg})` }}
     >
@@ -59,7 +63,7 @@ export const LoginPage = () => {
       ) : (
         <InputBioPage avatarImg={user.avatar} onBack={() => setMove(0)} />
       )}
-    </div>
+    </motion.div>
   );
 };
 
@@ -74,6 +78,7 @@ const InputBioPage = ({
   const name = useRef<HTMLInputElement>(null);
   const jurusan = useRef<HTMLSelectElement>(null);
   const navigate = useNavigate();
+  const { gameClock } = useGameData();
   const storage = useStorage();
   const handleSubmit = () => {
     if (
@@ -91,6 +96,8 @@ const InputBioPage = ({
       name: name.current?.value,
       major: JurusanData.find((val) => val.name === jurusan.current?.value),
     });
+    gameClock.reset();
+    storage.reset();
     navigate("/game");
   };
   return (
