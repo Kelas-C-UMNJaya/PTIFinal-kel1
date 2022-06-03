@@ -1,9 +1,9 @@
-import { NewsType } from "./../lib/@types";
+import { NewsType, ModalType } from "./../lib/@types";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "@/lib/UserContext";
 import { useGameData } from "@/lib/GameContext";
-import { addDays, format, parseISO } from "date-fns";
+import { addDays, format, parseISO, isSameDay } from "date-fns";
 import {
   TopBar,
   GreetingsBar,
@@ -13,6 +13,7 @@ import {
   ButtonGroup,
   OverlayModal,
   AvatarBody,
+  PauseMenu
 } from "@/components";
 import { LocationType, MatkulType } from "@/lib/@types";
 import { Location as LocationData, isStillTime } from "@/data/Location";
@@ -21,12 +22,6 @@ import { useNews } from "@/lib/useNews";
 import { useWeather } from "@/lib/useWeather";
 import { useStorage } from "@/lib/useStorage";
 
-type ModalType = {
-  news: boolean;
-  location: boolean;
-  matkul: boolean;
-  debug: boolean;
-};
 type LocationModalProps = {
   setMapOpen: () => void;
   handleLocationChange: (idx: number) => void;
@@ -42,8 +37,11 @@ export const GamePage = () => {
     matkul: false,
     debug: false,
   });
+
+  const [pause, setPause] = useState(false);
   const { news, fetchNews } = useNews();
   const { weatherData, fetchWeather } = useWeather();
+  const [today, setToday] = useState<Date>(gameClock.time);
   const storage = useStorage();
 
   function handleKeyDebug(e: KeyboardEvent) {
@@ -55,12 +53,15 @@ export const GamePage = () => {
   useEffect(() => {
     storage.getUser();
     document.addEventListener("keydown", handleKeyDebug);
-    gameClock.start();
     return () => {
       document.removeEventListener("keydown", handleKeyDebug);
-      gameClock.stop();
     };
-  }, []);
+  }, [pause]);
+  
+  useEffect(() => {
+    pause ? gameClock.stop() : gameClock.start();
+    return () => gameClock.stop();
+  }, [pause])
 
   useEffect(() => {
     if (gameClock.isFinish) {
@@ -73,10 +74,11 @@ export const GamePage = () => {
   useEffect(() => {
     fetchNews();
     fetchWeather();
+    setToday(gameClock.time);
   }, []);
 
   useEffect(() => {
-    if (user.name !== "") {
+    if (user.name !== "" && isSameDay(today, gameClock.time)) {
       storage.saveUser();
     }
   }, [user, location]);
@@ -118,7 +120,7 @@ export const GamePage = () => {
       <TopBar
         clock={format(gameClock.time, "HH:mm")}
         date={format(gameClock.time, "E, dd MMMM yyyy")}
-        onClick={() => navigate("/")}
+        onClick={() => setPause(true)}
         weatherData={weatherData}
       />
 
@@ -155,6 +157,11 @@ export const GamePage = () => {
             {openModal.debug && (
               <DebugModal key="Debug" setOpen={handleClickModal} />
             )}
+            
+            {pause && (
+              <PauseMenu key="Pause" setOpen={() => setPause(false)} />
+            )}
+
           </AnimatePresence>
         </div>
       </main>

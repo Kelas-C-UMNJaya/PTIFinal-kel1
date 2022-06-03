@@ -145,3 +145,10 @@ export type WeatherType = {
     icon: string;
   };
 };
+
+export type ModalType = {
+  news: boolean;
+  location: boolean;
+  matkul: boolean;
+  debug: boolean;
+};

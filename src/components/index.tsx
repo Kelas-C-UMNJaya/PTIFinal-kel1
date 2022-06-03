@@ -4,3 +4,4 @@ export { GreetingsBar } from "./GreetingsBar";
 export { ProgressBar, ProgressGroup } from "./ProgressBar";
 export { TopBar } from "./TopBar";
 export { AvatarBody } from "./AvatarBody";
+export { PauseMenu } from "./PauseMenu";

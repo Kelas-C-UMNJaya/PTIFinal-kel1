@@ -1,16 +1,20 @@
-import { Button, ButtonGroup } from "@/components";
+import { Button, ButtonGroup, OverlayModal } from "@/components";
 import umnBg from "@/assets/background/umn-pagi.png";
 import logo from "@/assets/logo.png";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import {useState} from "react";
+import { AnimatePresence } from "framer-motion";
 
 export const Home = () => {
+  const [showAbout, setShowAbout] = useState(false);
+
   return (
     <motion.div
       initial={{ x: 0, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       exit={{ x: 0, opacity: 0 }}
-      className="flex flex-col justify-center items-center h-screen"
+      className="relative flex flex-col justify-center items-center h-screen overflow-hidden"
       style={{
         backgroundImage: `url(${umnBg})`,
       }}
@@ -25,7 +29,19 @@ export const Home = () => {
         <Link to="/game">
           <Button>Resume</Button>
         </Link>
+        <Button onClick={() => setShowAbout(true)}>About</Button>
       </ButtonGroup>
+      <AnimatePresence>
+      {showAbout && <AboutModal key="about-us" setClose={() => setShowAbout(false)} />}
+      </AnimatePresence>
     </motion.div>
   );
 };
+
+const AboutModal = ({setClose}: {setClose: () => void}) => {
+  return (
+    <OverlayModal title="About" onClose={setClose} className="m-5" manualHeight>
+      <p>Aul suka titid gede</p>
+    </OverlayModal>
+  )
+}

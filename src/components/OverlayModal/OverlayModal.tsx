@@ -6,6 +6,7 @@ interface ModalProps extends ComponentProps {
   title: string;
   onClose: () => void;
   disableFloat?: boolean;
+  manualHeight?: boolean;
 }
 
 export const OverlayModal = ({
@@ -14,6 +15,7 @@ export const OverlayModal = ({
   children,
   className,
   disableFloat,
+  manualHeight = false,
 }: ModalProps) => {
   return (
     <motion.div
@@ -27,8 +29,11 @@ export const OverlayModal = ({
         x: "150%",
       }}
       transition={{ type: "spring", bounce: 0, duration: 0.4 }}
-      className={`inset-0 absolute lg:relative m-5 lg:m-0 flex flex-col gap-3 rounded-lg p-5 z-50 transition-opacity duration-300 ease-in-out bg-slate-800 text-white lg:h-0 lg:min-h-full
-      ${!disableFloat ? "inset-0 absolute" : ""} ${className}`}
+      className={`flex flex-col gap-3 rounded-lg p-5 z-50 transition-opacity duration-300 ease-in-out bg-slate-800 text-white 
+      ${disableFloat ? "inset-0 absolute lg:relative m-5 lg:m-0 " : "inset-0 absolute"} 
+      ${manualHeight ? "" : "lg:h-0 lg:min-h-full"}
+      ${className}`
+    }
     >
       <div className="flex justify-between items-center">
         <h1 className="text-2xl md:text-3xl font-bold">{title}</h1>
