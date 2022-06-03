@@ -3,6 +3,13 @@
 7 Days Aul Simulator merupakan suatu permainan simulasi kehidupan kuliah dari seorang mahasiswa UMN selama 7 hari.
 Permainan ini dibuat untuk memenuhi ujian akhir mata kuliah Pengantar Teknologi Internet (IF231-C).
 
+Game ini bisa diakses di https://ptiakhir-kel1.vercel.app
+
+> **Keterangan**
+> Untuk versi production, NewsAPI tidak bisa digunakan. Sehingga tombol
+> `News` pada game akan kosong. Untuk menggunakan NewsAPI, silahkan
+> mengacu pada section [Build](#build) dibawah.
+
 ## Video Presentasi
 
 [![Video Presentasi](https://img.youtube.com/vi/SanFPxBdWNA/0.jpg)](https://www.youtube.com/watch?v=SanFPxBdWNA)
