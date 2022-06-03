@@ -29,6 +29,7 @@ export interface ProviderProps {
 export type PlayerStatus = {
   name: string;
   val: number;
+  total: number;
   rate: {
     growth: number;
     shrink: number;
@@ -114,7 +115,11 @@ export type ReducerReturn =
   | {
       type: "setActive";
       payload: boolean;
-    };
+    }
+  | {
+      type: "addTotal";
+      payload: number;
+  }
 
 export interface MatkulType {
   name: string;

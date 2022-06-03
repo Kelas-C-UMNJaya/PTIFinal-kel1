@@ -30,24 +30,28 @@ export const UserProvider = ({ children }: ProviderProps) => {
       belajar: useStatus({
         name: "belajar",
         val: 0,
+        total: 0,
         rate: { growth: 1, shrink: 0 },
         isActive: false,
       }),
       makan: useStatus({
         name: "makan",
         val: 50,
+        total: 0,
         rate: { growth: 0.5, shrink: 0.3 },
         isActive: false,
       }),
       tidur: useStatus({
         name: "tidur",
         val: 50,
+        total: 0,
         rate: { growth: 1, shrink: 0.1 },
         isActive: false,
       }),
       main: useStatus({
         name: "main",
         val: 50,
+        total: 0,
         rate: { growth: 5, shrink: 2 },
         isActive: false,
       }),

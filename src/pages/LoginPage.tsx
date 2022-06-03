@@ -26,15 +26,6 @@ interface ButtonProps extends ComponentProps {
   onClick: () => void;
 }
 
-const AboutButton = ({ onClick, ...props }: ButtonProps) => (
-  <div
-    onClick={onClick}
-    className="flex justify-center rounded-full bg-slate-600 cursor-pointer text-3xl transition hover:text-sky-200 text-white p-2"
-  >
-    <Icon icon="eva:question-mark-outline" />
-  </div>
-);
-
 export const LoginPage = () => {
   const { user, changeData } = useUser();
   const [move, setMove] = useState(0);
@@ -46,10 +37,6 @@ export const LoginPage = () => {
       className="flex h-screen flex-col justify-center items-center backdrop-blur-sm bg-cover"
       style={{ backgroundImage: `url(${umnBg})` }}
     >
-      <div className="fixed top-0 right-0 p-5">
-        <AboutButton onClick={() => console.log("Aul suka titid gede")} />{" "}
-        {/* TODO: kasih Modal */}
-      </div>
       {/* <h1 className="text-center text-red-600">
         Halo semua, Aul suka yg pas ditangan
       </h1> */}

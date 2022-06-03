@@ -1,6 +1,6 @@
 import { ReducerReturn } from "./@types";
 import { PlayerStatus, StatusReturn } from "./@types";
-import { useReducer } from "react";
+import { useState, useReducer } from "react";
 
 export const useStatus = (input: PlayerStatus): StatusReturn => {
   const initRate = () => {
@@ -48,6 +48,12 @@ export const useStatus = (input: PlayerStatus): StatusReturn => {
           ...state,
           isActive: action.payload,
         };
+      
+      case "addTotal":
+        return {
+          ...state,
+          total: state.total + action.payload,
+        }
 
       case "resetRate":
         return {
