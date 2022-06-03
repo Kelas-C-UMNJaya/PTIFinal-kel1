@@ -9,13 +9,14 @@ import {
 import { Icon } from "@iconify/react";
 
 import { avatar } from "@/assets/avatar";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { ComponentProps } from "@/lib/@types";
 
 import { useUser } from "@/lib/UserContext";
 import { jurusan as JurusanData } from "@/data/Jurusan";
+import { useStorage } from "@/lib/useStorage";
 
 import umnBg from "@/assets/background/umn-pagi.png";
 
@@ -35,6 +36,9 @@ const AboutButton = ({ onClick, ...props }: ButtonProps) => (
 export const LoginPage = () => {
   const { user, changeData } = useUser();
   const [move, setMove] = useState(0);
+  useEffect(() => {
+    window.localStorage.removeItem("data");
+  }, []);
   return (
     <div
       className="flex h-screen flex-col justify-center items-center backdrop-blur-sm bg-cover"
@@ -71,6 +75,7 @@ const InputBioPage = ({
   const { changeData } = useUser();
   const name = useRef<HTMLInputElement>(null);
   const jurusan = useRef<HTMLSelectElement>(null);
+  const { setToLocalStorage } = useStorage();
   const navigate = useNavigate();
   const handleSubmit = () => {
     if (
