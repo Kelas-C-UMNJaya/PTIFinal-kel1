@@ -167,6 +167,7 @@ function Sidebar({
 }) {
   const { user, toggleStatus } = useUser();
   const { belajar, makan, main, tidur } = user.status;
+  const { gameClock } = useGameData();
 
   return (
     <div className={`flex flex-col gap-4 ${className}`}>
@@ -174,6 +175,7 @@ function Sidebar({
         userName={user.name}
         userMajor={user.major.name}
         userImg={user.avatar}
+        currentTime={gameClock.time}
         onClick={() => setOpenModal("news", true)}
       />
       <div id="ProgressBar" className="grow">
