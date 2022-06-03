@@ -120,6 +120,10 @@ export type ReducerReturn =
   | {
       type: "addTotal";
       payload: number;
+    }
+  | {
+      type: "setTotal";
+      payload: number;
     };
 
 export interface MatkulType {

@@ -58,6 +58,10 @@ export const useStorage = () => {
         type: "setVal",
         payload: localStorage.user.status[val].state.val,
       });
+      user.status[val].dispatch({
+        type: "setTotal",
+        payload: localStorage.user.status[val].state.total,
+      });
     }
     setLocation(localStorage.gameData.location);
     // setWeather(localStorage.weather.data);
