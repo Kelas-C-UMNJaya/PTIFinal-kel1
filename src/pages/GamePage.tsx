@@ -110,15 +110,6 @@ export const GamePage = () => {
     }
   }, [gameClock.time, location]);
 
-  // useEffect(() => {
-  //   window.addEventListener("beforeunload", () => {
-  //     setToLocalStorage();
-  //   });
-  //   return () => {
-  //     setToLocalStorage();
-  //     document.removeEventListener("beforeunload", setToLocalStorage);
-  //   };
-  // }, [gameClock.time]);
   function handleLocationChange(idx: number) {
     if (isStillTime(gameClock.time.getHours(), LocationData[idx].time)) {
       toggleStatus();

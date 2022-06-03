@@ -38,9 +38,6 @@ export const LoginPage = () => {
       className="flex h-screen flex-col justify-center items-center backdrop-blur-sm bg-cover"
       style={{ backgroundImage: `url(${umnBg})` }}
     >
-      {/* <h1 className="text-center text-red-600">
-        Halo semua, Aul suka yg pas ditangan
-      </h1> */}
       {move == 0 ? (
         <AvatarSelect
           onClick={(img) => {

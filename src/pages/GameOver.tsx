@@ -18,10 +18,12 @@ export const GameOver = () => {
     main: user.status.main.state.total / 6,
   });
 
-  useEffect(() => {
-    let status: "belajar" | "makan" | "tidur" | "main";
-    console.log(total);
-  }, []);
+  const totalToMsg = (val:typeof total) => {
+    if(val.belajar < 50) return "Kamu bodoh";
+    if(val.makan < 50) return "Kamu busung lapar";
+    if(val.tidur < 50) return "Kamu bisa narkolepsi";
+    if(val.main < 50) return "Kamu kurang holywings";
+  }
 
   function handleHome() {
     navigate("/");
@@ -42,8 +44,7 @@ export const GameOver = () => {
         <h1 className="text-2xl font-bold text-white">Game Over</h1>
         <Icon icon="foundation:skull" className="text-5xl text-white" />
         <h1 className="text-white">
-          Game selesai, titid mu sudah{" "}
-          <span className="text-red-500">mengecil</span>
+          Game selesai, {totalToMsg(total)}
         </h1>
         <div className="flex flex-col rounded-lg gap-3">
           <ProgressGroup className="grow md:w-[600px] w-60">
