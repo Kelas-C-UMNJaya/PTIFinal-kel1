@@ -1,5 +1,5 @@
 import { addHours, addMinutes, startOfToday, startOfWeek } from "date-fns";
-import { useState, createContext, useContext, useEffect } from "react";
+import { useState, createContext, useContext } from "react";
 import {
   GameContextType,
   ProviderProps,

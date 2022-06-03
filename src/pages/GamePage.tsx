@@ -14,8 +14,6 @@ import {
   OverlayModal,
   AvatarBody,
 } from "@/components";
-import axios from "axios";
-
 import { LocationType, MatkulType } from "@/lib/@types";
 import { Location as LocationData, isStillTime } from "@/data/Location";
 import { AnimatePresence, LayoutGroup } from "framer-motion";

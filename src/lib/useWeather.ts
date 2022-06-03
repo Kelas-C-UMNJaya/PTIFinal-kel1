@@ -23,6 +23,5 @@ export const useWeather = () => {
       console.log(err);
     }
   };
-
   return { weatherData, fetchWeather, setWeather, received };
 };
