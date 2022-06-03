@@ -6,6 +6,7 @@ export const GameOver = () => {
       animate={{ x: 0, opacity: 1 }}
       exit={{ x: 0, opacity: 0 }}
     >
+      
       <p>Gamenya kelar</p>
     </motion.div>
   );
