@@ -1,7 +1,5 @@
 import { LocationType } from "@/lib/@types";
-import umnBg from "@/assets/background/umn-siang.jpg";
-import bedDayBg from "@/assets/background/bedroomDay.jpg";
-import pubDaybg from "@/assets/background/pubDay.jpg";
+import { Background } from "@/assets/background";
 import { useGameData } from "@/lib/GameContext";
 import { isWithinInterval } from "date-fns";
 
@@ -16,7 +14,7 @@ export const isStillTime = (
 export const Location: LocationType[] = [
   {
     name: "Rumah",
-    bgImg: bedDayBg,
+    bgImg: Background.rumah,
     actions: [
       {
         name: "Tidur",
@@ -46,7 +44,7 @@ export const Location: LocationType[] = [
   },
   {
     name: "Kampus",
-    bgImg: umnBg,
+    bgImg: Background.kampus,
     time: {
       start: 7,
       end: 18,
@@ -71,7 +69,7 @@ export const Location: LocationType[] = [
   },
   {
     name: "HolyWings",
-    bgImg: pubDaybg,
+    bgImg: Background.pub,
     actions: [
       {
         name: "Main",

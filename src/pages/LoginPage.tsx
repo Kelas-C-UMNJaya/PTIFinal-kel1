@@ -21,7 +21,7 @@ import { useStorage } from "@/lib/useStorage";
 import { useGameData } from "@/lib/GameContext";
 import { Location as LocationData } from "@/data/Location";
 
-import umnBg from "@/assets/background/umn-pagi.png";
+import umnBg from "@/assets/background/umn-pagi.jpg";
 
 interface ButtonProps extends ComponentProps {
   onClick: () => void;

@@ -84,7 +84,10 @@ export interface LocationActionType {
 
 export interface LocationType {
   name: string;
-  bgImg: string;
+  bgImg: {
+    day: string;
+    night: string;
+  };
   time?: { start: number; end: number };
   actions: LocationActionType[];
 }
@@ -154,6 +157,7 @@ export type NewsType = {
 export type WeatherType = {
   temp: number;
   weather: {
+    id: number;
     main: string;
     description: string;
     icon: string;
