@@ -16,7 +16,7 @@ type ButtonProps = {
 };
 
 const PauseButton = ({ onClick }: ButtonProps) => (
-  <div className="flex flex-1 justify-end ml-auto ">
+  <div className="flex lg:flex-1 justify-end items-center lg:ml-auto ">
     <div className="hover:text-slate-400 text-slate-300 text-2xl cursor-pointer transition">
       <Icon onClick={onClick} icon="carbon:pause-filled" />
     </div>
@@ -38,7 +38,7 @@ const WeatherBar = ({
         alt="weather"
         className="h-8"
       />
-      <p className="text-s text-slate-300 font-bold">
+      <p className="text-s text-slate-300 font-bold hidden lg:block">
         {weatherData.weather.main}
       </p>
       <p className="text-s text-slate-300">{weatherData.temp}°C</p>
@@ -55,12 +55,12 @@ export const TopBar = ({
 }: Props) => {
   return (
     <div
-      className="bg-gray-800 text-white rounded-b-lg flex px-4 py-2 h-9"
+      className="bg-gray-800 text-white rounded-b-lg flex px-4 py-2 h-12 lg:h-9"
       {...props}
     >
       <div className="flex flex-1 items-center gap-3 mr-auto">
         <p className="text-xl font-bold">{clock}</p>
-        <p className="text-sm">{date}</p>
+        <p className="lg:text-sm text-xs">{date}</p>
       </div>
       <WeatherBar weatherData={weatherData} />
       <PauseButton onClick={onClick} />
